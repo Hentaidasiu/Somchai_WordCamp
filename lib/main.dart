@@ -34,12 +34,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   //Value
   List<Map<String, dynamic>> userData;
+  List<Map<String, dynamic>> favoriteData;
 
   //Function
   Future<bool> readUserData() async {
-    List<Map<String, dynamic>> data = await dbHelper.queryAllRows();
+    // List<Map<String, dynamic>> data = await dbHelper.queryAllRows();
     userData = await dbHelper.queryAllRows();
+    print('UserData');
     print(userData);
+
+    favoriteData = await dbHelper.queryFavorite();
+    print('FavouriteData');
+    print(favoriteData);
+
     return true;
   }
 
