@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:somchai_wordcamp/home.dart';
 
+import 'database/database.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -27,6 +29,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  //Database
+  final dbHelper = DatabaseHelper.instance;
+
+  //Value
+  List<Map<String, dynamic>> userData;
+
+  //Function
+  Future<bool> readUserData() async {
+    List<Map<String, dynamic>> data = await dbHelper.queryAllRows();
+    userData = await dbHelper.queryAllRows();
+    print(userData);
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,12 +55,8 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => HomePage()
-                    )
-                  );
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
                 },
                 icon: Icon(Icons.home),
                 label: Text('Home'),
@@ -61,6 +73,18 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
+              FutureBuilder(
+                future: readUserData(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    return Text(userData.toString());
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+              )
             ],
           ),
         ),
