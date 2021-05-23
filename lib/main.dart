@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:somchai_wordcamp/WordCard.dart';
 import 'package:somchai_wordcamp/home.dart';
 
 import 'database/database.dart';
@@ -60,6 +61,27 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
                 icon: Icon(Icons.home),
                 label: Text('Home'),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.grey[600],
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 30, vertical: 10), //ตามแกน
+                  shape: RoundedRectangleBorder(
+                      borderRadius: (BorderRadius.circular(5.0))),
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              //-------------------------------------MemorycardButtonBelow----------------------------------------
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => WordCardPage()));
+                },
+                icon: Icon(Icons.home),
+                label: Text('MemoryCard'),
                 style: ElevatedButton.styleFrom(
                   primary: Colors.grey[600],
                   padding: EdgeInsets.symmetric(
