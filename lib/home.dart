@@ -26,8 +26,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Home page'),
-        ),
+  title: Center(child: Text("App Bar without Back Button")),
+  automaticallyImplyLeading: false,
+),
         body: getbody(),
         bottomNavigationBar: bottom() );
         
