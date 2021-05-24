@@ -32,7 +32,6 @@ class _WordCardPageState extends State<WordCardPage> {
         body: Container(
           color: Colors.grey[400],
           width: double.infinity,
-          height: 50,
           child: Column(
             children: [
               Row(
@@ -44,7 +43,6 @@ class _WordCardPageState extends State<WordCardPage> {
                       fontSize: 24,
                     ),
                   ),
-                  Spacer(),
                   Text(
                     "Meaning",
                     style: TextStyle(
@@ -55,8 +53,31 @@ class _WordCardPageState extends State<WordCardPage> {
                 ],
               ),
               Divider(
-                color: Colors.black,
-                thickness: 2,
+                color: Colors.grey[600],
+                thickness: 3,
+              ),
+              Container(
+                width: double.infinity,
+                color: Colors.grey[50],
+                child: ListTile(
+                    title: Text('Understand'),
+                    subtitle: Text('un der sa tan'),
+                    trailing: Text('เข้าใจ'),
+                    onLongPress: (){
+                      return 
+                      ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Weight Record Deleted'))
+                    );
+                    },
+                    // onTap: (){
+                    //   Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) => DetailWeightPage(
+                    //         myWeightRecord: allRecords[index],))
+                    //   );
+                    // },
+                  ),
               ),
             ],
           ),
@@ -66,6 +87,14 @@ class _WordCardPageState extends State<WordCardPage> {
             height: 100,
             //padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
             color: Colors.purple[400],
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('View Static'),
+                Text('Test'),
+                Text('Add'),
+              ],
+            ),
           ),
         ));
   }
