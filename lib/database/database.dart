@@ -2,15 +2,11 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:date_format/date_format.dart';
 
 class DatabaseHelper {
   static final databaseName = 'somchaiWordCampDB.db';
   static final databaseVersion = 2;
-
-  static final table = 'my_weight_tb';
-  static final columnID = 'id';
-  static final columnWeight = 'weight';
-  static final columnRecordDate = 'recorded_date';
 
   //Build Singleton Class
   DatabaseHelper._privateConstructor();
@@ -19,10 +15,6 @@ class DatabaseHelper {
   //Assign to DatabaseName
   static Database _database;
   Future<Database> get database async {
-    // print(_database.getVersion());
-    // int currentDBVersion = await _database.getVersion();
-    // print('Database');
-    // print(_database);
     if (_database != null) return _database;
 
     _database = await _initDatabase();
@@ -31,8 +23,6 @@ class DatabaseHelper {
 
   //Method: Build Database
   _initDatabase() async {
-    // print('Create New');
-
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, databaseName);
 
@@ -61,47 +51,67 @@ class DatabaseHelper {
       CREATE TABLE favorite (favorite_ID INTEGER PRIMARY KEY AUTOINCREMENT, favorite_name TEXT NOT NULL);
     ''');
     await db.execute('''
-      CREATE TABLE favorite_group (favorite_group_ID INTEGER PRIMARY KEY AUTOINCREMENT, favorite_ID INTEGER NOT NULL, wordcard_ID INTEGER NOT NULL);
+      CREATE TABLE favorite_group (favorite_group_ID INTEGER PRIMARY KEY AUTOINCREMENT, wordcard_ID INTEGER NOT NULL, favorite_group1 INTEGER DEFAULT 0, favorite_group2 INTEGER DEFAULT 0, favorite_group3 INTEGER DEFAULT 0, favorite_group4 INTEGER DEFAULT 0, favorite_group5 INTEGER DEFAULT 0,);
     ''');
 
+    //Build Data
     Map<String, dynamic> firstUser = {
       'user_name': 'Somchai',
     };
-
     List<String> firstFavorite = ['FAV1', 'FAV2', 'FAV3', 'FAV4', 'FAV5'];
 
     await db.insert('user', firstUser);
-
     for (var i = 0; i < firstFavorite.length; i++) {
       Map<String, dynamic> data = {
         'favorite_name' : firstFavorite[i].toString()
       };
-      print(data);
       await db.insert('favorite', data);
     }
   }
 
-  //Method: Data Editted
-  //I: Add Data and return record ID.
-  Future<int> insert(Map<String, dynamic> row) async {
+  //Method:
+  //User: get Data
+  Future<Map<String, dynamic>> queryUserData() async {
     Database db = await instance.database;
-    return await db.insert('user', row);
-  }
 
-  //II: Data row count.
-  Future<int> queryRowCount() async {
-    Database db = await instance.database;
-    return Sqflite.firstIntValue(
-        await db.rawQuery('SELECT COUNT(*) from $table'));
-  }
-
-  //III: Get Data.
-  Future<List<Map<String, dynamic>>> queryAllRows() async {
-    Database db = await instance.database;
     List<Map<String, dynamic>> myQueryList =
         await db.rawQuery('SELECT * FROM user');
-    return myQueryList;
+    return myQueryList[0];
   }
+
+  //WordCard: get Data
+  Future<List<Map<String, dynamic>>> queryWordCardData() async {
+    Database db = await instance.database;
+
+    List<Map<String, dynamic>> myWordCardList =
+        await db.rawQuery('SELECT * FROM wordcard');
+    return myWordCardList;
+  }
+  
+  //WordCard: insert Data
+  Future<int> wordcardInsert(Map<String, dynamic> row) async {
+    Database db = await instance.database;
+    int insertID = await db.insert('wordcard', row);
+    String currentDate = formatDate(DateTime.now(),
+      [d, ' ', M, '-', yyyy]);
+
+    Map<String, dynamic> detailRow = {
+      'wordcard_ID': insertID,
+      'wordcard_detail_createdate': currentDate,
+    };
+
+    int detailID = await db.insert('wordcard_detail', detailRow);
+    print(detailID);
+
+    return insertID;
+  }
+
+  
+  // Future<int> queryRowCount() async {
+  //   Database db = await instance.database;
+  //   return Sqflite.firstIntValue(
+  //       await db.rawQuery('SELECT COUNT(*) from $table'));
+  // }
 
   Future<List<Map<String, dynamic>>> queryFavorite() async {
     Database db = await instance.database;
@@ -110,9 +120,9 @@ class DatabaseHelper {
     return myQueryList;
   }
 
-  //IV: Drop Data row. And return deleted row.
-  Future<int> deleteRow(int id) async {
-    Database db = await instance.database;
-    return await db.delete(table, where: '$columnID = ?', whereArgs: [id]);
-  }
+  
+  // Future<int> deleteRow(int id) async {
+  //   Database db = await instance.database;
+  //   return await db.delete(table, where: '$columnID = ?', whereArgs: [id]);
+  // }
 }

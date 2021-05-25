@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:somchai_wordcamp/WordCard.dart';
 import 'package:somchai_wordcamp/home.dart';
-
-import 'database/database.dart';
 
 void main() {
   runApp(MyApp());
@@ -29,26 +28,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  //Database
-  final dbHelper = DatabaseHelper.instance;
-
   //Value
-  List<Map<String, dynamic>> userData;
-  List<Map<String, dynamic>> favoriteData;
 
   //Function
-  Future<bool> readUserData() async {
-    // List<Map<String, dynamic>> data = await dbHelper.queryAllRows();
-    userData = await dbHelper.queryAllRows();
-    print('UserData');
-    print(userData);
-
-    favoriteData = await dbHelper.queryFavorite();
-    print('FavouriteData');
-    print(favoriteData);
-
-    return true;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,18 +62,27 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
-              FutureBuilder(
-                future: readUserData(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasData) {
-                    return Text(userData.toString());
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
+              //-------------------------------------MemorycardButtonBelow----------------------------------------
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => WordCardPage()));
                 },
-              )
+                icon: Icon(Icons.home),
+                label: Text('MemoryCard'),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.grey[600],
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 30, vertical: 10), //ตามแกน
+                  shape: RoundedRectangleBorder(
+                      borderRadius: (BorderRadius.circular(5.0))),
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
