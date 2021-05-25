@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:somchai_wordcamp/bottomsheet/AddNewWord.dart';
 import 'package:somchai_wordcamp/bottomsheet/wordcardInput.dart';
 import 'package:somchai_wordcamp/profile.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+
 
 class WordCardPage extends StatefulWidget {
   @override
@@ -140,9 +142,14 @@ class _WordCardPageState extends State<WordCardPage> {
             );
           }
           if (index == 3) {
-            await Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AddNewWordPage()),
+            // await Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => AddNewWordPage()),
+            // );
+            showCupertinoModalBottomSheet(
+              duration: Duration(milliseconds: 500), //popup speed
+              context: context, 
+              builder: (context) => AddNewWordPage(),
             );
           }
         },
