@@ -58,21 +58,17 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
   title: Center(child: Text("App Bar without Back Button")),
   automaticallyImplyLeading: false,
+  actions: <Widget>[
+    GestureDetector(
+      onTap: (){},
+      child: Icon(Icons.add,size:35.0),
+    )
+  ],
 ),
         body: getbody(),
         bottomNavigationBar: bottom(context));
   }
 
-  Widget test() {
-    return ListView.builder(
-      itemCount: 5,
-      itemBuilder: (BuildContext context, int index) {
-        return ListTile(
-          title: Text("D555555555555"),
-        );
-      },
-    );
-  }
 
   Widget getbody() {
     return Column(children: [
