@@ -4,13 +4,44 @@ import 'package:somchai_wordcamp/bottomsheet/wordcardInput.dart';
 import 'package:somchai_wordcamp/profile.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
+//Database
+import 'database/database.dart';
 
-class WordCardPage extends StatefulWidget {
+class WordCardDetailPage extends StatefulWidget {
+  final int wordCardID;
+
+  WordCardDetailPage({Key key, this.wordCardID}) : super(key: key);
+
   @override
-  _WordCardPageState createState() => _WordCardPageState();
+  WordCardDetailPageState createState() => WordCardDetailPageState(wordCardID);
 }
 
-class _WordCardPageState extends State<WordCardPage> {
+class WordCardDetailPageState extends State<WordCardDetailPage> {
+  //Constructer
+  WordCardDetailPageState(this.wordCardID);
+
+  //Database
+  final dbHelper = DatabaseHelper.instance;
+
+  //Value
+  Map<String, dynamic> wordcardInfo = {};
+  List<Map<String, dynamic>> cardList = [];
+  int wordCardID;
+  String wordCardName = 'Name';
+
+  //Function
+  Future<void> getWordCardData() async {
+    wordcardInfo = await dbHelper.queryOneWordCardData(wordCardID);
+    print(wordcardInfo);
+
+    cardList = await dbHelper.queryWordList(wordCardID);
+    print(cardList);
+
+    setState(() {
+      wordCardName = wordcardInfo['wordcard_name'];
+    });
+  }
+
   // //อ่านข้อมูล
   // Future<bool> readWeightRecorderDB() async{
   //   allRecords = await dbHelper.queryAllRows();
@@ -26,11 +57,19 @@ class _WordCardPageState extends State<WordCardPage> {
   // }
 
   @override
+  void initState() {
+    super.initState();
+
+    print('Super');
+    getWordCardData();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'English Word',
+          '$wordCardName',
           style: TextStyle(fontSize: 30),
         ),
       ),
@@ -124,10 +163,10 @@ class _WordCardPageState extends State<WordCardPage> {
         ],
         onTap: (int index) async {
           if (index == 0) {
-            await Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => WordCardPage()),
-            );
+            // await Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => WordCardPage()),
+            // );
           }
           if (index == 1) {
             await Navigator.push(

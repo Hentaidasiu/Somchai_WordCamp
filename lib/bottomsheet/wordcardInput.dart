@@ -26,7 +26,15 @@ class WordCardInputFormPageState extends State<WordCardInputFormPage> {
       'wordcard_topic': wordCardTopic
     };
 
-    final id = await dbHelper.wordcardInsert(row);
+    Map<String, dynamic> favorite = {
+      'favorite_group1': (groupSelected[0]) ? 1 : 0,
+      'favorite_group2': (groupSelected[1]) ? 1 : 0,
+      'favorite_group3': (groupSelected[2]) ? 1 : 0,
+      'favorite_group4': (groupSelected[3]) ? 1 : 0,
+      'favorite_group5': (groupSelected[4]) ? 1 : 0,
+    };
+
+    final id = await dbHelper.wordcardInsert(row, favorite);
     print('Row ID: $id $row');
   }
 

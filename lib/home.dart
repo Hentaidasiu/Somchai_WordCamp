@@ -7,6 +7,7 @@ import 'database/database.dart';
 //Page
 import 'profile.dart';
 import 'bottomsheet/wordcardInput.dart';
+import 'WordCard.dart';
 
 class HomePage extends StatefulWidget {
   //Value
@@ -33,15 +34,25 @@ class _HomePageState extends State<HomePage> {
     "JAPAN2",
     "Russian5"
   ];
-  List<Map<String, dynamic>> wordcardInfo;
-  List<Map<String, dynamic>> category_info;
+  List<Map<String, dynamic>> wordcardInfo = [];
+  int categorySelect = 0;
+  String categoryText = 'All';
 
   //Function
-  Future<bool> readWeightRecorderDB() async {
-    wordcardInfo = await dbHelper.queryWordCardData();
+  Future<bool> getWordCardData(int value) async {
+    if (value == 0) {
+      wordcardInfo = await dbHelper.queryWordCardData();
+    } else {
+      wordcardInfo = await dbHelper.queryCategoryData(value);
+    }
 
     setState(() {
       wordcardInfo = wordcardInfo;
+      if (value == 0) {
+        categoryText = 'All';
+      } else {
+        categoryText = 'FAV' + value.toString();
+      }
     });
 
     return true;
@@ -53,12 +64,11 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-    Future<void> getCategoryData(int e) async {
-      
-    setState(() async {
-      category_info = await dbHelper.queryCategoryData(e);
-      print(category_info);
+  Future<void> getCategoryData(int e) async {
+    wordcardInfo = await dbHelper.queryCategoryData(e);
 
+    setState(() {
+      wordcardInfo = wordcardInfo;
     });
   }
 
@@ -66,19 +76,18 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-  title: Center(child: Text("App Bar without Back Button")),
-  automaticallyImplyLeading: false,
-  actions: <Widget>[
-    GestureDetector(
-      onTap: (){},
-      child: Icon(Icons.add,size:35.0),
-    )
-  ],
-),
+          title: Center(child: Text("App Bar without Back Button")),
+          automaticallyImplyLeading: false,
+          actions: <Widget>[
+            GestureDetector(
+              onTap: () {},
+              child: Icon(Icons.add, size: 35.0),
+            )
+          ],
+        ),
         body: getbody(),
         bottomNavigationBar: bottom(context));
   }
-
 
   Widget getbody() {
     return Column(children: [
@@ -92,21 +101,13 @@ class _HomePageState extends State<HomePage> {
             shrinkWrap: true,
             crossAxisCount: 6,
             children: <Widget>[
-              Container(
-                padding: const EdgeInsets.all(8),
-                child: Column(children: [
-                  Icon(
-                    Icons.supervised_user_circle,
-                    size: 20,
-                  ),
-                  Text("${cateName[1]}")
-                ]),
-                color: Colors.teal[100],
-              ),
               GestureDetector(
-                onTap: (){getCategoryData(1);},
+                onTap: () {
+                  setState(() {
+                    categorySelect = 0;
+                  });
+                },
                 child: Container(
-                  
                   padding: const EdgeInsets.all(8),
                   child: Column(children: [
                     Icon(
@@ -114,7 +115,24 @@ class _HomePageState extends State<HomePage> {
                       size: 20,
                     ),
                     Text("${cateName[1]}")
-                    
+                  ]),
+                  color: Colors.teal[100],
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    categorySelect = 1;
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(children: [
+                    Icon(
+                      Icons.supervised_user_circle,
+                      size: 20,
+                    ),
+                    Text("${cateName[1]}")
                   ]),
                   color: Colors.teal[100],
                 ),
@@ -165,16 +183,27 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           )),
+      Text('Category: $categoryText', style: TextStyle(fontSize: 14)),
       Expanded(
         flex: 8,
         child: FutureBuilder(
-          future: readWeightRecorderDB(),
+          future: getWordCardData(categorySelect),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
                 itemCount: wordcardInfo.length,
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => WordCardDetailPage(
+                            wordCardID: wordcardInfo[index]['wordcard_ID'],
+                          ),
+                        ),
+                      );
+                    },
                     leading: Icon(Icons.book_rounded, size: 36),
                     title: Text(
                       wordcardInfo[index]['wordcard_name'],
@@ -241,7 +270,7 @@ class _HomePageState extends State<HomePage> {
             MaterialPageRoute(builder: (context) => ProfileInfoPage()),
           );
         }
-        readWeightRecorderDB();
+        getWordCardData(categorySelect);
       },
     );
   }

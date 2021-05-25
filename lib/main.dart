@@ -66,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ElevatedButton.icon(
                 onPressed: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => WordCardPage()));
+                      MaterialPageRoute(builder: (context) => WordCardDetailPage()));
                 },
                 icon: Icon(Icons.home),
                 label: Text('MemoryCard'),

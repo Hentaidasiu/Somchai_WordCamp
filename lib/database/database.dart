@@ -63,7 +63,7 @@ class DatabaseHelper {
     await db.insert('user', firstUser);
     for (var i = 0; i < firstFavorite.length; i++) {
       Map<String, dynamic> data = {
-        'favorite_name' : firstFavorite[i].toString()
+        'favorite_name': firstFavorite[i].toString()
       };
       await db.insert('favorite', data);
     }
@@ -78,11 +78,11 @@ class DatabaseHelper {
         await db.rawQuery('SELECT * FROM user');
     return myQueryList[0];
   }
-  
+
   //User: update Data
   Future<int> updateUserData(int id, Map<String, dynamic> row) async {
     Database db = await instance.database;
-    
+
     return await db.update('user', row, where: 'user_ID = ?', whereArgs: [id]);
   }
 
@@ -94,41 +94,69 @@ class DatabaseHelper {
         await db.rawQuery('SELECT * FROM wordcard');
     return myWordCardList;
   }
-    //WordCard: get Categotrr
+
+  //WordCard: get Data [Asset]
+  Future<Map<String, dynamic>> queryOneWordCardData(int value) async {
+    Database db = await instance.database;
+
+    List<Map<String, dynamic>> myWordCardData =
+        await db.rawQuery('SELECT * FROM wordcard WHERE wordcard_ID = $value');
+    return myWordCardData[0];
+  }
+
+  //WordCard: get Category
   Future<List<Map<String, dynamic>>> queryCategoryData(int event) async {
     Database db = await instance.database;
-    String column = "favorite_group"+event.toString();
+
+    String column = "favorite_group" + event.toString();
+
     List<Map<String, dynamic>> myCategoryList =
         await db.rawQuery('SELECT * FROM favorite_group where $column == 1');
-    List<Map<String, dynamic>> mynewCategoryList;
-        for(var i = 0; i<myCategoryList.length;i++){
-          var context = myCategoryList[i]['wordcard_ID'];
-          List<Map<String, dynamic>> getInfo =   await db.rawQuery('SELECT * FROM wordcard where wordcard_ID == $context');
-          mynewCategoryList.add(getInfo[0]);
-        }
 
+    List<Map<String, dynamic>> mynewCategoryList = [];
+    for (var i = 0; i < myCategoryList.length; i++) {
+      var context = myCategoryList[i]['wordcard_ID'];
+      List<Map<String, dynamic>> getInfo =
+        await db.rawQuery('SELECT * FROM wordcard where wordcard_ID == $context');
+      mynewCategoryList.addAll(getInfo);
+    }
+    
     return mynewCategoryList;
   }
-  
+
   //WordCard: insert Data
-  Future<int> wordcardInsert(Map<String, dynamic> row) async {
+  Future<int> wordcardInsert(
+      Map<String, dynamic> row, Map<String, dynamic> favorite) async {
     Database db = await instance.database;
     int insertID = await db.insert('wordcard', row);
-    String currentDate = formatDate(DateTime.now(),
-      [d, ' ', M, '-', yyyy]);
+    String currentDate = formatDate(DateTime.now(), [d, ' ', M, '-', yyyy]);
 
     Map<String, dynamic> detailRow = {
       'wordcard_ID': insertID,
       'wordcard_detail_createdate': currentDate,
     };
 
+    favorite['wordcard_ID'] = insertID;
+    print(favorite);
+
     int detailID = await db.insert('wordcard_detail', detailRow);
     print(detailID);
+
+    int favoriteID = await db.insert('favorite_group', favorite);
+    print(favoriteID);
 
     return insertID;
   }
 
-  
+  //Word: get word
+  Future<List<Map<String, dynamic>>> queryWordList(int value) async {
+    Database db = await instance.database;
+
+    List<Map<String, dynamic>> myWordList =
+        await db.rawQuery('SELECT * FROM word WHERE wordcard_ID = $value');
+    return myWordList;
+  }
+
   // Future<int> queryRowCount() async {
   //   Database db = await instance.database;
   //   return Sqflite.firstIntValue(
@@ -142,7 +170,6 @@ class DatabaseHelper {
     return myQueryList;
   }
 
-  
   // Future<int> deleteRow(int id) async {
   //   Database db = await instance.database;
   //   return await db.delete(table, where: '$columnID = ?', whereArgs: [id]);
