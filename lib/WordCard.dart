@@ -32,14 +32,21 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
   //Function
   Future<void> getWordCardData() async {
     wordcardInfo = await dbHelper.queryOneWordCardData(wordCardID);
-    print(wordcardInfo);
-
-    cardList = await dbHelper.queryWordList(wordCardID);
-    print(cardList);
 
     setState(() {
+      wordcardInfo = wordcardInfo;
       wordCardName = wordcardInfo['wordcard_name'];
     });
+  }
+
+  Future<bool> getWordList() async {
+    cardList = await dbHelper.queryWordList(wordCardID);
+
+    setState(() {
+      cardList = cardList;
+    });
+
+    return true;
   }
 
   // //อ่านข้อมูล
@@ -56,20 +63,20 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
   //   return numberOfDeleteItem;
   // }
 
-  @override
-  void initState() {
-    super.initState();
+  // @override
+  // void initState() {
+  //   super.initState();
 
-    print('Super');
-    getWordCardData();
-  }
+  //   print('Super');
+  //   getWordCardData();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '$wordCardName',
+          'WordCard',
           style: TextStyle(fontSize: 30),
         ),
       ),
@@ -104,37 +111,28 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
             Container(
               width: double.infinity,
               color: Colors.grey[50],
-              child: ListTile(
-                title: Text('Understand'),
-                subtitle: Text('un der sa tan'),
-                trailing: Text('เข้าใจ'),
-                onLongPress: () {
-                  showMenu(
-                    context: context,
-                    position: RelativeRect.fromLTRB(0, 0, 0, 0),
-                    items: [
-                      PopupMenuItem<int>(
-                        value: 0,
-                        child: Text('Edit'),
-                      ),
-                      PopupMenuItem<int>(
-                        value: 1,
-                        child: Text('Delete'),
-                      ),
-                    ],
-                  );
-                  // return ScaffoldMessenger.of(context).showSnackBar(
-                  //     SnackBar(content: Text('Weight Record Deleted')));
-                },
-                // onTap: (){
-                //   Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //       builder: (context) => DetailWeightPage(
-                //         myWeightRecord: allRecords[index],))
-                //   );
-                // },
-              ),
+              child: Column(children: [
+                FutureBuilder(
+                  future: getWordList(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      return Center(
+                        child: Text('$cardList'),
+                      );
+                      // return ListView.builder(
+                      //   itemCount: cardList.length,
+                      //   itemBuilder: (BuildContext context, int index) {
+                      //     return here;
+                      //   },
+                      // );
+                    } else {
+                      return Center(
+                        child: Text('No Word Found'),
+                      );
+                    }
+                  },
+                ),
+              ]),
             ),
           ],
         ),
@@ -167,30 +165,31 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
             //   context,
             //   MaterialPageRoute(builder: (context) => WordCardPage()),
             // );
-          }
-          if (index == 1) {
+          } else if (index == 1) {
             await Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => WordCardInputFormPage()),
             );
-          }
-          if (index == 2) {
+          } else if (index == 2) {
             await Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ProfileInfoPage()),
             );
-          }
-          if (index == 3) {
+          } else if (index == 3) {
             // await Navigator.push(
             //   context,
             //   MaterialPageRoute(builder: (context) => AddNewWordPage()),
             // );
-            showCupertinoModalBottomSheet(
-              duration: Duration(milliseconds: 500), //popup speed
-              context: context, 
-              builder: (context) => AddNewWordPage(),
+            await showCupertinoModalBottomSheet(
+              duration: Duration(milliseconds: 250), //popup speed
+              context: context,
+              builder: (context) => AddNewWordPage(wordCardID: wordCardID),
             );
           }
+          setState(() {
+            getWordCardData();
+            getWordList();
+          });
         },
       ),
     );

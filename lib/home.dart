@@ -218,7 +218,9 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.purple.shade800,
                       ),
                     ),
-                    trailing: Icon(Icons.keyboard_arrow_right),
+                    trailing: Text(
+                      '${wordcardInfo[index]['wordcard_word'].toString()} word',
+                    ),
                   );
                 },
               );

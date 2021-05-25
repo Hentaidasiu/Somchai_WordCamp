@@ -116,11 +116,11 @@ class DatabaseHelper {
     List<Map<String, dynamic>> mynewCategoryList = [];
     for (var i = 0; i < myCategoryList.length; i++) {
       var context = myCategoryList[i]['wordcard_ID'];
-      List<Map<String, dynamic>> getInfo =
-        await db.rawQuery('SELECT * FROM wordcard where wordcard_ID == $context');
+      List<Map<String, dynamic>> getInfo = await db
+          .rawQuery('SELECT * FROM wordcard where wordcard_ID == $context');
       mynewCategoryList.addAll(getInfo);
     }
-    
+
     return mynewCategoryList;
   }
 
@@ -155,6 +155,25 @@ class DatabaseHelper {
     List<Map<String, dynamic>> myWordList =
         await db.rawQuery('SELECT * FROM word WHERE wordcard_ID = $value');
     return myWordList;
+  }
+
+  //Word: insert Data
+  Future<int> wordInsert(Map<String, dynamic> row, int id) async {
+    Database db = await instance.database;
+
+    int insertID = await db.insert('word', row);
+
+    List<Map<String, dynamic>> myWordCardData =
+        await db.rawQuery('SELECT * FROM wordcard WHERE wordcard_ID = $id');
+    
+    Map<String, dynamic> updateWordCard = {
+      'wordcard_word': myWordCardData[0]['wordcard_word'] + 1
+    };
+    print('Word' + myWordCardData[0]['wordcard_word'].toString());
+
+    int result = await db.update('wordcard', updateWordCard, where: 'wordcard_ID = ?', whereArgs: [id]);
+
+    return insertID;
   }
 
   // Future<int> queryRowCount() async {
