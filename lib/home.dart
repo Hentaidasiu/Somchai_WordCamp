@@ -34,6 +34,7 @@ class _HomePageState extends State<HomePage> {
     "Russian5"
   ];
   List<Map<String, dynamic>> wordcardInfo;
+  List<Map<String, dynamic>> category_info;
 
   //Function
   Future<bool> readWeightRecorderDB() async {
@@ -52,26 +53,32 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+    Future<void> getCategoryData(int e) async {
+      
+    setState(() async {
+      category_info = await dbHelper.queryCategoryData(e);
+      print(category_info);
+
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Home page'),
-        ),
+  title: Center(child: Text("App Bar without Back Button")),
+  automaticallyImplyLeading: false,
+  actions: <Widget>[
+    GestureDetector(
+      onTap: (){},
+      child: Icon(Icons.add,size:35.0),
+    )
+  ],
+),
         body: getbody(),
         bottomNavigationBar: bottom(context));
   }
 
-  Widget test() {
-    return ListView.builder(
-      itemCount: 5,
-      itemBuilder: (BuildContext context, int index) {
-        return ListTile(
-          title: Text("D555555555555"),
-        );
-      },
-    );
-  }
 
   Widget getbody() {
     return Column(children: [
@@ -96,16 +103,21 @@ class _HomePageState extends State<HomePage> {
                 ]),
                 color: Colors.teal[100],
               ),
-              Container(
-                padding: const EdgeInsets.all(8),
-                child: Column(children: [
-                  Icon(
-                    Icons.supervised_user_circle,
-                    size: 20,
-                  ),
-                  Text("${cateName[1]}")
-                ]),
-                color: Colors.teal[100],
+              GestureDetector(
+                onTap: (){getCategoryData(1);},
+                child: Container(
+                  
+                  padding: const EdgeInsets.all(8),
+                  child: Column(children: [
+                    Icon(
+                      Icons.supervised_user_circle,
+                      size: 20,
+                    ),
+                    Text("${cateName[1]}")
+                    
+                  ]),
+                  color: Colors.teal[100],
+                ),
               ),
               Container(
                 padding: const EdgeInsets.all(8),
@@ -197,7 +209,7 @@ class _HomePageState extends State<HomePage> {
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
-          label: 'Home',
+          label: 'Home\ndasdsa',
           backgroundColor: Colors.red,
         ),
         BottomNavigationBarItem(

@@ -94,6 +94,21 @@ class DatabaseHelper {
         await db.rawQuery('SELECT * FROM wordcard');
     return myWordCardList;
   }
+    //WordCard: get Categotrr
+  Future<List<Map<String, dynamic>>> queryCategoryData(int event) async {
+    Database db = await instance.database;
+    String column = "favorite_group"+event.toString();
+    List<Map<String, dynamic>> myCategoryList =
+        await db.rawQuery('SELECT * FROM favorite_group where $column == 1');
+    List<Map<String, dynamic>> mynewCategoryList;
+        for(var i = 0; i<myCategoryList.length;i++){
+          var context = myCategoryList[i]['wordcard_ID'];
+          List<Map<String, dynamic>> getInfo =   await db.rawQuery('SELECT * FROM wordcard where wordcard_ID == $context');
+          mynewCategoryList.add(getInfo[0]);
+        }
+
+    return mynewCategoryList;
+  }
   
   //WordCard: insert Data
   Future<int> wordcardInsert(Map<String, dynamic> row) async {
