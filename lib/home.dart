@@ -163,7 +163,7 @@ class _HomePageState extends State<HomePage> {
                 itemCount: wordcardInfo.length,
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
-                    leading: Icon(Icons.person_outlined),
+                    leading: Icon(Icons.book_rounded, size: 36),
                     title: Text(
                       wordcardInfo[index]['wordcard_name'],
                       style: TextStyle(
