@@ -51,7 +51,7 @@ class DatabaseHelper {
       CREATE TABLE favorite (favorite_ID INTEGER PRIMARY KEY AUTOINCREMENT, favorite_name TEXT NOT NULL);
     ''');
     await db.execute('''
-      CREATE TABLE favorite_group (favorite_group_ID INTEGER PRIMARY KEY AUTOINCREMENT, wordcard_ID INTEGER NOT NULL, favorite_group1 INTEGER DEFAULT 0, favorite_group2 INTEGER DEFAULT 0, favorite_group3 INTEGER DEFAULT 0, favorite_group4 INTEGER DEFAULT 0, favorite_group5 INTEGER DEFAULT 0,);
+      CREATE TABLE favorite_group (favorite_group_ID INTEGER PRIMARY KEY AUTOINCREMENT, wordcard_ID INTEGER NOT NULL, favorite_group1 INTEGER DEFAULT 0, favorite_group2 INTEGER DEFAULT 0, favorite_group3 INTEGER DEFAULT 0, favorite_group4 INTEGER DEFAULT 0, favorite_group5 INTEGER DEFAULT 0);
     ''');
 
     //Build Data
@@ -77,6 +77,13 @@ class DatabaseHelper {
     List<Map<String, dynamic>> myQueryList =
         await db.rawQuery('SELECT * FROM user');
     return myQueryList[0];
+  }
+  
+  //User: update Data
+  Future<int> updateUserData(int id, Map<String, dynamic> row) async {
+    Database db = await instance.database;
+    
+    return await db.update('user', row, where: 'user_ID = ?', whereArgs: [id]);
   }
 
   //WordCard: get Data
