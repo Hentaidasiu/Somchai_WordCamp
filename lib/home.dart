@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-
+import 'package:popup_menu/popup_menu.dart';
 //Database
 import 'database/database.dart';
 
@@ -81,8 +81,61 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+final List<BottomNavigationBarItem> bottomNavBarItems = [
+  BottomNavigationBarItem(
+      title: Row(children:[Text("USERID"),Text("LV50")] ),
+     icon: Row(children: [Icon(Icons.money),Text("500"),])
+  ),
+  BottomNavigationBarItem(
+      icon: Icon(Icons.blur_circular),
+             title: Text("Fish Pond")
+  ),
+  BottomNavigationBarItem(
+      icon: Icon(Icons.add),
+             title: Text("Sell idle")
+  ),
+  BottomNavigationBarItem(
+      icon: Icon(Icons.message),
+             title: Text("Message")
+  ),
+  BottomNavigationBarItem(
+      icon: Icon(Icons.person),
+             title: Text("My")
+  ),
+];
+
+   void showPopup(Offset offset) {
+    PopupMenu menu = PopupMenu(
+        // backgroundColor: Colors.teal,
+        // lineColor: Colors.tealAccent,
+        maxColumn: 3,
+        items: [
+          MenuItem(title: 'Copy', image: Image.asset('assets/copy.png')),
+          MenuItem(title: 'Mail', image: Icon(Icons.mail, color: Colors.white)),
+          MenuItem(title: 'Power',image: Icon(Icons.power, color: Colors.white,)),
+        ],
+        onClickMenu: onClickMenu,
+        stateChanged: stateChanged,
+        onDismiss: onDismiss);
+    menu.show(rect: Rect.fromPoints(offset, offset));
+  }
+
+  void stateChanged(bool isShow) {
+    print('menu is ${isShow ? 'showing' : 'closed'}');
+  }
+
+  void onClickMenu(MenuItemProvider item) {
+    print('Click menu -> ${item.menuTitle}');
+  }
+
+  void onDismiss() {
+    print('Menu is dismiss');
+  }
+  
+
   @override
   Widget build(BuildContext context) {
+     PopupMenu.context = context;
     return Scaffold(
         appBar: AppBar(
           title: Center(child: Text("App Bar without Back Button")),
@@ -95,7 +148,42 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         body: getbody(),
-        bottomNavigationBar: bottom(context));
+       bottomNavigationBar: BottomNavigationBar(
+         
+        items: bottomNavBarItems,
+        type: BottomNavigationBarType.fixed,
+         onTap: (int index) async {
+        if (index == 0) {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => WordCardInputFormPage()),
+          );
+        } else if (index == 1) {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ProfileInfoPage()),
+          );
+        }
+        getWordCardData(categorySelect);
+      }
+      ),   floatingActionButton: FloatingActionButton(
+        onPressed: (){
+           Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => WordCardInputFormPage()),
+          );
+        } ,
+        child: Icon(
+          Icons.add,
+          size: 36,
+          
+        ),
+        backgroundColor: Colors.yellow,
+        foregroundColor: Colors.black,
+        
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    );
   }
 
   Widget getbody() {
@@ -104,7 +192,7 @@ class _HomePageState extends State<HomePage> {
           flex: -1,
           child: GridView.count(
             primary: false,
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(5),
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
             shrinkWrap: true,
@@ -153,7 +241,8 @@ class _HomePageState extends State<HomePage> {
                     Icons.supervised_user_circle,
                     size: 20,
                   ),
-                  Text("${cateName[1]}")
+                  Text("${cateName[1]}",overflow: TextOverflow.fade,maxLines: 3,
+                  softWrap: false)
                 ]),
                 color: Colors.teal[100],
               ),
@@ -164,7 +253,8 @@ class _HomePageState extends State<HomePage> {
                     Icons.supervised_user_circle,
                     size: 20,
                   ),
-                  Text("${cateName[1]}")
+                  Text("${cateName[1]}",overflow: TextOverflow.fade,maxLines: 3,
+                  softWrap: false)
                 ]),
                 color: Colors.teal[100],
               ),
@@ -175,7 +265,8 @@ class _HomePageState extends State<HomePage> {
                     Icons.supervised_user_circle,
                     size: 20,
                   ),
-                  Text("${cateName[1]}")
+                  Text("${cateName[1]}",overflow: TextOverflow.fade,maxLines: 3,
+                  softWrap: false)
                 ]),
                 color: Colors.teal[100],
               ),
@@ -186,7 +277,8 @@ class _HomePageState extends State<HomePage> {
                     Icons.supervised_user_circle,
                     size: 20,
                   ),
-                  Text("${cateName[1]}")
+                  Text("${cateName[1]}",overflow: TextOverflow.fade,maxLines: 3,
+                  softWrap: false)
                 ]),
                 color: Colors.teal[100],
               ),
@@ -212,6 +304,10 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       );
+                    },
+                    
+                    onLongPress: (){
+                      print("DDDD");
                     },
                     leading: Icon(Icons.book_rounded, size: 36),
                     title: Text(
@@ -243,6 +339,9 @@ class _HomePageState extends State<HomePage> {
       ),
     ]);
   }
+
+
+
 
   Widget bottom(BuildContext context) {
     return BottomNavigationBar(
@@ -292,3 +391,4 @@ class _HomePageState extends State<HomePage> {
     "250",
   ];
 }
+
