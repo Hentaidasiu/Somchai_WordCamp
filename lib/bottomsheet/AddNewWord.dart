@@ -50,6 +50,14 @@ class _AddNewWordPageState extends State<AddNewWordPage> {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
+              Text(
+                'Add New Word',
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 16),
               Text('Word:'),
               TextField(
                 style: TextStyle(

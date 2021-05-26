@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:somchai_wordcamp/bottomsheet/AddNewWord.dart';
-import 'package:somchai_wordcamp/bottomsheet/wordcardInput.dart';
-import 'package:somchai_wordcamp/profile.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+
+//Page
+import 'test.dart';
+import 'bottomsheet/testOption.dart';
 
 //Database
 import 'database/database.dart';
@@ -25,7 +27,7 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
 
   //Value
   Map<String, dynamic> wordcardInfo = {};
-  List<Map<String, dynamic>> cardList = [];
+  List<Map<String, dynamic>> wordList = [];
   int wordCardID;
   String wordCardName = 'Name';
 
@@ -33,18 +35,11 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
   Future<void> getWordCardData() async {
     wordcardInfo = await dbHelper.queryOneWordCardData(wordCardID);
 
-    setState(() {
-      wordcardInfo = wordcardInfo;
-      wordCardName = wordcardInfo['wordcard_name'];
-    });
+    wordCardName = wordcardInfo['wordcard_name'];
   }
 
   Future<bool> getWordList() async {
-    cardList = await dbHelper.queryWordList(wordCardID);
-
-    setState(() {
-      cardList = cardList;
-    });
+    wordList = await dbHelper.queryWordList(wordCardID);
 
     return true;
   }
@@ -56,34 +51,20 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
     return true;
   }
 
-  // //อ่านข้อมูล
-  // Future<bool> readWeightRecorderDB() async{
-  //   allRecords = await dbHelper.queryAllRows();
-  //   print(allRecords);
-  //   return true;
-  // }
+  @override
+  void initState() {
+    getWordCardData();
+    getWordList();
 
-  // //ลบข้อลูล
-  // Future<int> deleteWeightRecorderDB(int id) async{
-  //   var numberOfDeleteItem = await dbHelper.delete(id);
-  //   print('Delete Weight Record ID = $id');
-  //   return numberOfDeleteItem;
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  //   print('Super');
-  //   getWordCardData();
-  // }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'WordCard',
+          '$wordCardName',
           style: TextStyle(fontSize: 30),
         ),
       ),
@@ -124,10 +105,10 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
                       return Center(
-                        child: Text('$cardList'),
+                        child: Text('$wordList'),
                       );
                       // return ListView.builder(
-                      //   itemCount: cardList.length,
+                      //   itemCount: wordList.length,
                       //   itemBuilder: (BuildContext context, int index) {
                       //     return here;
                       //   },
@@ -173,15 +154,27 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
             //   MaterialPageRoute(builder: (context) => WordCardPage()),
             // );
           } else if (index == 1) {
-            await Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => WordCardInputFormPage()),
-            );
+            // await Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => WordTestPage(wordCardID: wordCardID, wordList: wordList, randomQuestion: true)),
+            // );
+            if (wordList.length < 5) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Require at least 5 word to use Test feature.'),
+              ));
+            } else {
+              await showCupertinoModalBottomSheet(
+                duration: Duration(milliseconds: 250), //popup speed
+                context: context,
+                builder: (context) =>
+                    TestOptionPage(wordCardID: wordCardID, wordList: wordList),
+              );
+            }
           } else if (index == 2) {
-            await Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ProfileInfoPage()),
-            );
+            // await Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => ProfileInfoPage()),
+            // );
           } else if (index == 3) {
             // await Navigator.push(
             //   context,
@@ -194,7 +187,6 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
             );
           }
           setState(() {
-            getWordCardData();
             getWordList();
           });
         },
