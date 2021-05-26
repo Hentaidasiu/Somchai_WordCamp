@@ -26,7 +26,15 @@ class WordCardInputFormPageState extends State<WordCardInputFormPage> {
       'wordcard_topic': wordCardTopic
     };
 
-    final id = await dbHelper.wordcardInsert(row);
+    Map<String, dynamic> favorite = {
+      'favorite_group1': (groupSelected[0]) ? 1 : 0,
+      'favorite_group2': (groupSelected[1]) ? 1 : 0,
+      'favorite_group3': (groupSelected[2]) ? 1 : 0,
+      'favorite_group4': (groupSelected[3]) ? 1 : 0,
+      'favorite_group5': (groupSelected[4]) ? 1 : 0,
+    };
+
+    final id = await dbHelper.wordcardInsert(row, favorite);
     print('Row ID: $id $row');
   }
 
@@ -43,7 +51,7 @@ class WordCardInputFormPageState extends State<WordCardInputFormPage> {
           child: Column(
             children: <Widget>[
               Text(
-                'Add new WordCard',
+                'Create new WordCard',
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
@@ -53,15 +61,15 @@ class WordCardInputFormPageState extends State<WordCardInputFormPage> {
               Text(
                 'Create your new WordCard for storage your word.',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 10,
                 ),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 8),
               Text(
                   '----------------------------------------------------------------'),
-              SizedBox(height: 16),
+              SizedBox(height: 8),
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
                 child: Column(
                   children: [
                     Text('WordCard Name:'),
@@ -122,11 +130,14 @@ class WordCardInputFormPageState extends State<WordCardInputFormPage> {
               SizedBox(height: 16),
               ElevatedButton.icon(
                 onPressed: () {
-                  insertWordCard();
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text('Congret! You have $wordCardName as a new WordCard.'),
-                  ));
-                  Navigator.pop(context);
+                  if (wordCardName != '' && wordCardTopic != '') {
+                    insertWordCard();
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                          'Congret! You have $wordCardName as a new WordCard.'),
+                    ));
+                    Navigator.pop(context);
+                  }
                 },
                 icon: Icon(Icons.save),
                 label: Text('Save'),

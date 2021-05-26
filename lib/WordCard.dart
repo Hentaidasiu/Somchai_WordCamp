@@ -4,13 +4,58 @@ import 'package:somchai_wordcamp/bottomsheet/wordcardInput.dart';
 import 'package:somchai_wordcamp/profile.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
+//Database
+import 'database/database.dart';
 
-class WordCardPage extends StatefulWidget {
+class WordCardDetailPage extends StatefulWidget {
+  final int wordCardID;
+
+  WordCardDetailPage({Key key, this.wordCardID}) : super(key: key);
+
   @override
-  _WordCardPageState createState() => _WordCardPageState();
+  WordCardDetailPageState createState() => WordCardDetailPageState(wordCardID);
 }
 
-class _WordCardPageState extends State<WordCardPage> {
+class WordCardDetailPageState extends State<WordCardDetailPage> {
+  //Constructer
+  WordCardDetailPageState(this.wordCardID);
+
+  //Database
+  final dbHelper = DatabaseHelper.instance;
+
+  //Value
+  Map<String, dynamic> wordcardInfo = {};
+  List<Map<String, dynamic>> cardList = [];
+  int wordCardID;
+  String wordCardName = 'Name';
+
+  //Function
+  Future<void> getWordCardData() async {
+    wordcardInfo = await dbHelper.queryOneWordCardData(wordCardID);
+
+    setState(() {
+      wordcardInfo = wordcardInfo;
+      wordCardName = wordcardInfo['wordcard_name'];
+    });
+  }
+
+  Future<bool> getWordList() async {
+    cardList = await dbHelper.queryWordList(wordCardID);
+
+    setState(() {
+      cardList = cardList;
+    });
+
+    return true;
+  }
+
+  Future<bool> deleteWordData(int value) async {
+    int id = await dbHelper.deleteWordData(value, wordCardID);
+    print(id);
+
+    return true;
+  }
+
   // //อ่านข้อมูล
   // Future<bool> readWeightRecorderDB() async{
   //   allRecords = await dbHelper.queryAllRows();
@@ -25,12 +70,20 @@ class _WordCardPageState extends State<WordCardPage> {
   //   return numberOfDeleteItem;
   // }
 
+  // @override
+  // void initState() {
+  //   super.initState();
+
+  //   print('Super');
+  //   getWordCardData();
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'English Word',
+          'WordCard',
           style: TextStyle(fontSize: 30),
         ),
       ),
@@ -65,37 +118,28 @@ class _WordCardPageState extends State<WordCardPage> {
             Container(
               width: double.infinity,
               color: Colors.grey[50],
-              child: ListTile(
-                title: Text('Understand'),
-                subtitle: Text('un der sa tan'),
-                trailing: Text('เข้าใจ'),
-                onLongPress: () {
-                  showMenu(
-                    context: context,
-                    position: RelativeRect.fromLTRB(0, 0, 0, 0),
-                    items: [
-                      PopupMenuItem<int>(
-                        value: 0,
-                        child: Text('Edit'),
-                      ),
-                      PopupMenuItem<int>(
-                        value: 1,
-                        child: Text('Delete'),
-                      ),
-                    ],
-                  );
-                  // return ScaffoldMessenger.of(context).showSnackBar(
-                  //     SnackBar(content: Text('Weight Record Deleted')));
-                },
-                // onTap: (){
-                //   Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //       builder: (context) => DetailWeightPage(
-                //         myWeightRecord: allRecords[index],))
-                //   );
-                // },
-              ),
+              child: Column(children: [
+                FutureBuilder(
+                  future: getWordList(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      return Center(
+                        child: Text('$cardList'),
+                      );
+                      // return ListView.builder(
+                      //   itemCount: cardList.length,
+                      //   itemBuilder: (BuildContext context, int index) {
+                      //     return here;
+                      //   },
+                      // );
+                    } else {
+                      return Center(
+                        child: Text('No Word Found'),
+                      );
+                    }
+                  },
+                ),
+              ]),
             ),
           ],
         ),
@@ -124,34 +168,35 @@ class _WordCardPageState extends State<WordCardPage> {
         ],
         onTap: (int index) async {
           if (index == 0) {
-            await Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => WordCardPage()),
-            );
-          }
-          if (index == 1) {
+            // await Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => WordCardPage()),
+            // );
+          } else if (index == 1) {
             await Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => WordCardInputFormPage()),
             );
-          }
-          if (index == 2) {
+          } else if (index == 2) {
             await Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ProfileInfoPage()),
             );
-          }
-          if (index == 3) {
+          } else if (index == 3) {
             // await Navigator.push(
             //   context,
             //   MaterialPageRoute(builder: (context) => AddNewWordPage()),
             // );
-            showCupertinoModalBottomSheet(
-              duration: Duration(milliseconds: 500), //popup speed
-              context: context, 
-              builder: (context) => AddNewWordPage(),
+            await showCupertinoModalBottomSheet(
+              duration: Duration(milliseconds: 250), //popup speed
+              context: context,
+              builder: (context) => AddNewWordPage(wordCardID: wordCardID),
             );
           }
+          setState(() {
+            getWordCardData();
+            getWordList();
+          });
         },
       ),
     );
