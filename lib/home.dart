@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
           flex: -1,
           child: GridView.count(
             primary: false,
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(5),
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
             shrinkWrap: true,
@@ -99,7 +99,8 @@ class _HomePageState extends State<HomePage> {
                     Icons.supervised_user_circle,
                     size: 20,
                   ),
-                  Text("${cateName[1]}")
+                  Text("${cateName[1]}",overflow: TextOverflow.fade,maxLines: 3,
+                  softWrap: false)
                 ]),
                 color: Colors.teal[100],
               ),
@@ -113,8 +114,8 @@ class _HomePageState extends State<HomePage> {
                       Icons.supervised_user_circle,
                       size: 20,
                     ),
-                    Text("${cateName[1]}")
-                    
+                    Text("${cateName[1]}",overflow: TextOverflow.fade,maxLines: 3,
+                  softWrap: false)
                   ]),
                   color: Colors.teal[100],
                 ),
@@ -126,7 +127,8 @@ class _HomePageState extends State<HomePage> {
                     Icons.supervised_user_circle,
                     size: 20,
                   ),
-                  Text("${cateName[1]}")
+                  Text("${cateName[1]}",overflow: TextOverflow.fade,maxLines: 3,
+                  softWrap: false)
                 ]),
                 color: Colors.teal[100],
               ),
@@ -137,7 +139,8 @@ class _HomePageState extends State<HomePage> {
                     Icons.supervised_user_circle,
                     size: 20,
                   ),
-                  Text("${cateName[1]}")
+                  Text("${cateName[1]}",overflow: TextOverflow.fade,maxLines: 3,
+                  softWrap: false)
                 ]),
                 color: Colors.teal[100],
               ),
@@ -148,7 +151,8 @@ class _HomePageState extends State<HomePage> {
                     Icons.supervised_user_circle,
                     size: 20,
                   ),
-                  Text("${cateName[1]}")
+                  Text("${cateName[1]}",overflow: TextOverflow.fade,maxLines: 3,
+                  softWrap: false)
                 ]),
                 color: Colors.teal[100],
               ),
@@ -159,7 +163,8 @@ class _HomePageState extends State<HomePage> {
                     Icons.supervised_user_circle,
                     size: 20,
                   ),
-                  Text("${cateName[1]}")
+                  Text("${cateName[1]}",overflow: TextOverflow.fade,maxLines: 3,
+                  softWrap: false)
                 ]),
                 color: Colors.teal[100],
               ),
