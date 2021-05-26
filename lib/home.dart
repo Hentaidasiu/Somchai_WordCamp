@@ -58,17 +58,26 @@ class _HomePageState extends State<HomePage> {
     return true;
   }
 
-  Future<void> refreshData() async {
-    setState(() async {
-      wordcardInfo = await dbHelper.queryWordCardData();
-    });
-  }
-
-  Future<void> getCategoryData(int e) async {
+  Future<bool> getCategoryData(int e) async {
     wordcardInfo = await dbHelper.queryCategoryData(e);
 
     setState(() {
       wordcardInfo = wordcardInfo;
+    });
+
+    return true;
+  }
+
+  Future<bool> deleteWordCardData(int value) async {
+    int id = await dbHelper.deleteWordCardData(value);
+    print(id);
+
+    return true;
+  }
+
+  Future<void> refreshData() async {
+    setState(() async {
+      wordcardInfo = await dbHelper.queryWordCardData();
     });
   }
 

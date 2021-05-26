@@ -148,6 +148,20 @@ class DatabaseHelper {
     return insertID;
   }
 
+  //WordCard: update Data
+  Future<int> updateWordCardData(int id, Map<String, dynamic> row) async {
+    Database db = await instance.database;
+
+    return await db.update('wordcard', row, where: 'wordcard_ID = ?', whereArgs: [id]);
+  }
+
+  //WordCard: delete Data
+  Future<int> deleteWordCardData(int id) async {
+    Database db = await instance.database;
+
+    return await db.delete('wordcard', where: 'wordcard_ID = ?', whereArgs: [id]);
+  }
+
   //Word: get word
   Future<List<Map<String, dynamic>>> queryWordList(int value) async {
     Database db = await instance.database;
@@ -169,11 +183,33 @@ class DatabaseHelper {
     Map<String, dynamic> updateWordCard = {
       'wordcard_word': myWordCardData[0]['wordcard_word'] + 1
     };
-    print('Word' + myWordCardData[0]['wordcard_word'].toString());
 
     int result = await db.update('wordcard', updateWordCard, where: 'wordcard_ID = ?', whereArgs: [id]);
 
     return insertID;
+  }
+
+  //Word: update Data
+  Future<int> updateWordData(int id, Map<String, dynamic> row) async {
+    Database db = await instance.database;
+
+    return await db.update('word', row, where: 'word_ID = ?', whereArgs: [id]);
+  }
+
+  //Word: delete Data
+  Future<int> deleteWordData(int id, int wordcardID) async {
+    Database db = await instance.database;
+
+    List<Map<String, dynamic>> myWordCardData =
+        await db.rawQuery('SELECT * FROM wordcard WHERE wordcard_ID = $wordcardID');
+    
+    Map<String, dynamic> updateWordCard = {
+      'wordcard_word': myWordCardData[0]['wordcard_word'] - 1
+    };
+
+    int result = await db.update('wordcard', updateWordCard, where: 'wordcard_ID = ?', whereArgs: [wordcardID]);
+
+    return await db.delete('word', where: 'word_ID = ?', whereArgs: [id]);
   }
 
   // Future<int> queryRowCount() async {

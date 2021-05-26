@@ -49,6 +49,13 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
     return true;
   }
 
+  Future<bool> deleteWordData(int value) async {
+    int id = await dbHelper.deleteWordData(value, wordCardID);
+    print(id);
+
+    return true;
+  }
+
   // //อ่านข้อมูล
   // Future<bool> readWeightRecorderDB() async{
   //   allRecords = await dbHelper.queryAllRows();
