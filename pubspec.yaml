@@ -35,6 +35,7 @@ dependencies:
   popup_menu: ^1.0.5
   fluttertoast: ^8.0.7
   flutter_overboard: ^2.0.1
+  focused_menu: ^1.0.5
 
 dev_dependencies:
   flutter_test:
