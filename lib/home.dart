@@ -168,10 +168,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void initState() async {
-    await getUserData();
-    await getWordCardData(categorySelect);
-    await bottomNavSet();
+  void initState() {
+    getUserData();
+    getWordCardData(categorySelect);
+    bottomNavSet();
 
     super.initState();
   }
