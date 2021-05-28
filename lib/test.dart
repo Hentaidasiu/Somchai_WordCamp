@@ -57,45 +57,163 @@ class WordTestPageState extends State<WordTestPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Test Page',
-            style: TextStyle(fontSize: 30),
-          ),
+      appBar: AppBar(
+        title: Text(
+          'Test Page',
+          style: TextStyle(fontSize: 30),
         ),
-        // body: Column(children: [
-        //   Text(questionList.toString()),
-        //   Text(answerList.toString()),
-        //   Text(trueanswerList.toString()),
-        //   Text(questionTotal.toString()),
-        //])
-        body: Container(
-          child: Column(
-            children: [
-              Row(
+      ),
+      // body: Column(children: [
+      //   Text(questionList.toString()),
+      //   Text(answerList.toString()),
+      //   Text(trueanswerList.toString()),
+      //   Text(questionTotal.toString()),
+      //])
+      body: Container(
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+              child: Row(
                 children: [
                   Expanded(
-                    child: Center(child: Text('Times left', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),))
-                  ),
+                      child: Center(
+                          child: Text(
+                    'Times left',
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  ))),
                   Expanded(
-                    child: Center(child: Text('1/10', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),))
-                  )
+                      child: Center(
+                          child: Text(
+                    '1/10',
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  )))
                 ],
               ),
-              Row(
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+              child: Row(
                 children: [
                   Expanded(
-                    flex: 3,
-                    child: Center(child: Icon(Icons.timer, size: 70,),)
-                  ),
+                      flex: 3,
+                      child: Center(
+                        child: Icon(
+                          Icons.timer,
+                          size: 100,
+                        ),
+                      )),
                   Expanded(
-                    child: Center(child: Text('Buy time', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),))
-                  ),
+                      child: Center(
+                          child: Text(
+                    'Buy time',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ))),
+                  Expanded(
+                      child: Center(
+                          child: Text(
+                    'Hint',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ))),
+                  Expanded(
+                      child: Center(
+                          child: Text(
+                    'Skip',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ))),
                 ],
-              )
-            ],
-          ),
+              ),
+            ),
+            getQuestion(),
+          ],
         ),
+      ),
     );
   }
+}
+
+Widget getQuestion() {
+  return Container(
+    child: Column(
+      children: [
+        Container(
+          padding: EdgeInsets.fromLTRB(0, 55, 0, 55),
+          child: Text(
+            '1. qwertyuiopasdfg',
+            style: TextStyle(fontSize: 40),
+          ),
+        ),
+        Container(
+          child: Column(
+            children: [
+              Container(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        child: Container(
+                          child: Center(
+                            child: Text('กำไดใครก่อ', style: TextStyle(fontSize: 20),)),
+                            color: Colors.green[300],
+                            padding: EdgeInsets.fromLTRB(0, 90, 0, 90),
+                        ),
+                        onTap: (){
+                          
+                        },
+                      )
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        child: Container(
+                          child: Center(
+                            child: Text('กำไดใครก่อ', style: TextStyle(fontSize: 20),)),
+                            color: Colors.red[300],
+                            padding: EdgeInsets.fromLTRB(0, 90, 0, 90),
+                        ),
+                        onTap: (){
+
+                        },
+                      )
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        child: Container(
+                          child: Center(
+                            child: Text('กำไดใครก่อ', style: TextStyle(fontSize: 20),)),
+                            color: Colors.blue[300],
+                            padding: EdgeInsets.fromLTRB(0, 90, 0, 90),
+                        ),
+                        onTap: (){
+
+                        },
+                      )
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        child: Container(
+                          child: Center(
+                            child: Text('กำไดใครก่อ', style: TextStyle(fontSize: 20),)),
+                            color: Colors.yellow[300],
+                            padding: EdgeInsets.fromLTRB(0, 90, 0, 90),
+                        ),
+                        onTap: (){
+
+                        },
+                      )
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        )
+      ],
+    ),
+  );
 }
