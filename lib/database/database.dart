@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
@@ -86,6 +87,73 @@ class DatabaseHelper {
     return await db.update('user', row, where: 'user_ID = ?', whereArgs: [id]);
   }
 
+  //User: update xp Data
+  Future<Map<String, dynamic>> updateXPUserData(int gainXP) async {
+    Database db = await instance.database;
+    int id = 0;
+
+    List<Map<String, dynamic>> user = await db.rawQuery('SELECT * FROM user WHERE user_ID = 1');
+    Map<String, dynamic> userData = user[id];
+
+    int newXP = userData['user_exp'] + gainXP;
+    int newLevel = userData['user_level'];
+    while (newXP >= levelCap(newLevel)) {
+      newXP = newXP - levelCap(newLevel);
+      newLevel = newLevel + 1;
+    }
+
+    Map<String, dynamic> newUserData = {
+      'user_exp': newXP,
+      'user_level': newLevel
+    };
+
+    int returnID = await db.update('user', newUserData, where: 'user_ID = ?', whereArgs: [id]);
+
+    return newUserData;
+    // return await db.update('user', row, where: 'user_ID = ?', whereArgs: [id]);
+  }
+
+  //User: update coin Data
+  Future<bool> updateCoinUser(int gainCoin) async {
+    Database db = await instance.database;
+    int id = 0;
+
+    List<Map<String, dynamic>> user = await db.rawQuery('SELECT * FROM user WHERE user_ID = 1');
+    Map<String, dynamic> userData = user[id];
+
+    int newCoin = userData['user_coin'] + gainCoin;
+
+    Map<String, dynamic> newCoinData = {
+      'user_coin': newCoin
+    };
+
+    if (newCoin >= 0) {
+      var returnID = await db.update('user', newCoinData, where: 'user_ID = ?', whereArgs: [id]);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //User: update profile Data
+  Future<bool> updateProfileUser(int profile) async {
+    Database db = await instance.database;
+    int id = 0;
+
+    Map<String, dynamic> newProfileData = {
+      'user_profileicon': profile
+    };
+
+    var returnID = await db.update('user', newProfileData, where: 'user_ID = ?', whereArgs: [id]);
+    return true;
+  }
+
+  //Get XP Range
+  int levelCap(int level) {
+    int power = pow(2, level-2);
+    return 100 * power;
+  }
+
   //WordCard: get Data
   Future<List<Map<String, dynamic>>> queryWordCardData() async {
     Database db = await instance.database;
@@ -95,7 +163,7 @@ class DatabaseHelper {
     return myWordCardList;
   }
 
-  //WordCard: get Data [Asset]
+  //WordCard: get Data [One]
   Future<Map<String, dynamic>> queryOneWordCardData(int value) async {
     Database db = await instance.database;
 
@@ -155,11 +223,34 @@ class DatabaseHelper {
     return await db.update('wordcard', row, where: 'wordcard_ID = ?', whereArgs: [id]);
   }
 
+  //WordCard: update detail
+  Future<int> updateWordCardDetail(int id, int mode, int score, int getscore) async {
+    Database db = await instance.database;
+
+    List<Map<String, dynamic>> row = await db.rawQuery('SELECT * FROM wordcard WHERE wordcard_ID = $id');
+    Map<String, dynamic> wordRow = row[0];
+    
+    int newN = wordRow['wordcard_detail_testedall'] + 1;
+    int newAccuary = int.parse(((wordRow['wordcard_detail_testedall'] * wordRow['wordcard_detail_accuary']) + (getscore / score)) / newN);
+    int newHighscore = (wordRow['wordcard_detail_highscore'] > getscore) ? wordRow['wordcard_detail_highscore'] : getscore;
+
+    Map<String, dynamic> newRow = {
+      'wordcard_detail_testedall': newN,
+      'wordcard_detail_accuary': newAccuary,
+      'wordcard_detail_highscore': newHighscore
+    };
+
+    return await db.update('wordcard_detail', newRow, where: 'wordcard_ID = ?', whereArgs: [id]);
+  }
+
   //WordCard: delete Data
   Future<int> deleteWordCardData(int id) async {
     Database db = await instance.database;
-
-    return await db.delete('wordcard', where: 'wordcard_ID = ?', whereArgs: [id]);
+    int deleteid = await db.delete('wordcard', where: 'wordcard_ID = ?', whereArgs: [id]);
+    int wordDelete = await db.delete('word', where: 'wordcard_ID = ?', whereArgs: [id]);
+    int favoriteDelete = await db.delete('favorite_group', where: 'wordcard_ID = ?', whereArgs: [id]);
+    
+    return deleteid;
   }
 
   //Word: get word
@@ -211,22 +302,4 @@ class DatabaseHelper {
 
     return await db.delete('word', where: 'word_ID = ?', whereArgs: [id]);
   }
-
-  // Future<int> queryRowCount() async {
-  //   Database db = await instance.database;
-  //   return Sqflite.firstIntValue(
-  //       await db.rawQuery('SELECT COUNT(*) from $table'));
-  // }
-
-  Future<List<Map<String, dynamic>>> queryFavorite() async {
-    Database db = await instance.database;
-    List<Map<String, dynamic>> myQueryList =
-        await db.rawQuery('SELECT * FROM favorite');
-    return myQueryList;
-  }
-
-  // Future<int> deleteRow(int id) async {
-  //   Database db = await instance.database;
-  //   return await db.delete(table, where: '$columnID = ?', whereArgs: [id]);
-  // }
 }
