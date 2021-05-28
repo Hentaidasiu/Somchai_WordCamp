@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:somchai_wordcamp/bottomsheet/AddNewWord.dart';
 
 //Database
 import 'database/database.dart';
 
 //Class
 import 'object/wordtest.dart';
+
+//Page
+import './resultPage.dart';
 
 class WordTestPage extends StatefulWidget {
   final List<Map<String, dynamic>> wordList;
@@ -124,7 +128,7 @@ class WordTestPageState extends State<WordTestPage> {
                 ],
               ),
             ),
-            getQuestion(),
+            getQuestion(context),
           ],
         ),
       ),
@@ -132,7 +136,7 @@ class WordTestPageState extends State<WordTestPage> {
   }
 }
 
-Widget getQuestion() {
+Widget getQuestion(BuildContext context){
   return Container(
     child: Column(
       children: [
@@ -158,7 +162,7 @@ Widget getQuestion() {
                             padding: EdgeInsets.fromLTRB(0, 90, 0, 90),
                         ),
                         onTap: (){
-                          
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage()),);
                         },
                       )
                     ),
