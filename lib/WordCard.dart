@@ -100,32 +100,33 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
               width: double.infinity,
               color: Colors.grey[50],
               child: Column(children: [
+                // FutureBuilder(
+                //   future: getWordList(),
+                //   builder: (BuildContext context, AsyncSnapshot snapshot) {
+                //     if (snapshot.hasData) {
+                //       return Center(
+                //         child: Text('$wordList'),
+                //       );
+                //       // return ListView.builder(
+                //       //   itemCount: wordList.length,
+                //       //   itemBuilder: (BuildContext context, int index) {
+                //       //     return here;
+                //       //   },
+                //       // );
+                //     } else {
+                //       return Center(
+                //         child: Text('No Word Found'),
+                //       );
+                //     }
+                //   },
+                // ),
                 FutureBuilder(
                   future: getWordList(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
+                      print(wordList[0]['word_word']);
                       return Center(
-                        child: Text('$wordList'),
-                      );
-                      // return ListView.builder(
-                      //   itemCount: wordList.length,
-                      //   itemBuilder: (BuildContext context, int index) {
-                      //     return here;
-                      //   },
-                      // );
-                    } else {
-                      return Center(
-                        child: Text('No Word Found'),
-                      );
-                    }
-                  },
-                ),
-                FutureBuilder(
-                  future: getWordList(),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (snapshot.hasData) {
-                      return Center(
-                        child: Text('$wordList'),
+                        child: Text('eiei')
                       );
                       // return ListView.builder(
                       //   itemCount: wordList.length,
@@ -176,6 +177,11 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
           } else if (index == 1) {
             // await Navigator.push(
             //   context,
+            //   MaterialPageRoute(builder: (context) => ProfileInfoPage()),
+            // );
+          } else if (index == 2) {
+            // await Navigator.push(
+            //   context,
             //   MaterialPageRoute(builder: (context) => WordTestPage(wordCardID: wordCardID, wordList: wordList, randomQuestion: true)),
             // );
             if (wordList.length < 5) {
@@ -190,11 +196,6 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
                     TestOptionPage(wordCardID: wordCardID, wordList: wordList),
               );
             }
-          } else if (index == 2) {
-            // await Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => ProfileInfoPage()),
-            // );
           } else if (index == 3) {
             // await Navigator.push(
             //   context,
