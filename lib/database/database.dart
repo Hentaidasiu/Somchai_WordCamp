@@ -76,7 +76,8 @@ class DatabaseHelper {
     Database db = await instance.database;
 
     List<Map<String, dynamic>> myQueryList =
-        await db.rawQuery('SELECT * FROM user');
+        await db.rawQuery('SELECT * FROM user WHERE user_ID = 1');
+
     return myQueryList[0];
   }
 

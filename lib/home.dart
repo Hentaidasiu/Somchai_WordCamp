@@ -25,7 +25,8 @@ class _HomePageState extends State<HomePage> {
   final dbHelper = DatabaseHelper.instance;
 
   //Value
-  List<String> cateName = ["All", "Fav1", "Fav2", "Fav3", "Fav4", "Fav5"];
+  Map<String, dynamic> userData = {};
+  List<String> cateName = ["All", "FAV1", "FAV2", "FAV3", "FAV4", "FAV5"];
   List<String> wordCardName = [
     "English1",
     "CAL1",
@@ -37,8 +38,21 @@ class _HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> wordcardInfo = [];
   int categorySelect = 0;
   String categoryText = 'All';
+  String username = 'Username';
+  int usercoin = 0;
+  int userlevel = 0;
 
   //Function
+  Future<void> getUserData() async {
+    userData = await dbHelper.queryUserData();
+
+    setState(() {
+      username = userData['user_name'];
+      usercoin = userData['user_coin'];
+      userlevel = userData['user_level'];
+    });
+  }
+
   Future<bool> getWordCardData(int value) async {
     if (value == 0) {
       wordcardInfo = await dbHelper.queryWordCardData();
@@ -81,30 +95,40 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-final List<BottomNavigationBarItem> bottomNavBarItems = [
-  BottomNavigationBarItem(
-      title: Row(children:[Text("USERID"),Text("LV50")] ),
-     icon: Row(children: [Icon(Icons.money),Text("500"),])
-  ),
-  BottomNavigationBarItem(
-      icon: Icon(Icons.blur_circular),
-             title: Text("Fish Pond")
-  ),
-  BottomNavigationBarItem(
-      icon: Icon(Icons.add),
-             title: Text("Sell idle")
-  ),
-  BottomNavigationBarItem(
-      icon: Icon(Icons.message),
-             title: Text("Message")
-  ),
-  BottomNavigationBarItem(
-      icon: Icon(Icons.person),
-             title: Text("My")
-  ),
-];
+  List<BottomNavigationBarItem> bottomNavBarItems;
 
-   void showPopup(Offset offset) {
+  bottomNavSet() {
+    bottomNavBarItems = [
+      BottomNavigationBarItem(
+          title: Container(
+            padding: const EdgeInsets.only(left: 4),
+            child: Row(children: [
+              Text('LV${userlevel.toString()} ',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(username.toUpperCase(),
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            ]),
+          ),
+          icon: Container(
+            padding: const EdgeInsets.only(left: 2),
+            child: Row(children: [
+              Icon(Icons.money),
+              Container(
+                margin: const EdgeInsets.only(left: 2),
+                child: Text(usercoin.toString()),
+              ),
+            ]),
+          )),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.add, color: Colors.white),
+          title: Text("ADD", style: TextStyle(color: Colors.white))),
+      BottomNavigationBarItem(icon: Icon(Icons.add), title: Text("ADD")),
+      BottomNavigationBarItem(icon: Icon(Icons.message), title: Text("GAME")),
+      BottomNavigationBarItem(icon: Icon(Icons.person), title: Text("PROFILE")),
+    ];
+  }
+
+  void showPopup(Offset offset) {
     PopupMenu menu = PopupMenu(
         // backgroundColor: Colors.teal,
         // lineColor: Colors.tealAccent,
@@ -112,7 +136,12 @@ final List<BottomNavigationBarItem> bottomNavBarItems = [
         items: [
           MenuItem(title: 'Copy', image: Image.asset('assets/copy.png')),
           MenuItem(title: 'Mail', image: Icon(Icons.mail, color: Colors.white)),
-          MenuItem(title: 'Power',image: Icon(Icons.power, color: Colors.white,)),
+          MenuItem(
+              title: 'Power',
+              image: Icon(
+                Icons.power,
+                color: Colors.white,
+              )),
         ],
         onClickMenu: onClickMenu,
         stateChanged: stateChanged,
@@ -131,56 +160,77 @@ final List<BottomNavigationBarItem> bottomNavBarItems = [
   void onDismiss() {
     print('Menu is dismiss');
   }
-  
+
+  void setData() async {
+    await getUserData();
+    await getWordCardData(categorySelect);
+    await bottomNavSet();
+  }
+
+  @override
+  void initState() async {
+    await getUserData();
+    await getWordCardData(categorySelect);
+    await bottomNavSet();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-     PopupMenu.context = context;
+    PopupMenu.context = context;
     return Scaffold(
-        appBar: AppBar(
-          title: Center(child: Text("App Bar without Back Button")),
-          automaticallyImplyLeading: false,
-          actions: <Widget>[
-            GestureDetector(
-              onTap: () {},
-              child: Icon(Icons.add, size: 35.0),
-            )
-          ],
+      appBar: AppBar(
+        title: Center(child: Text("Somchai WordCard")),
+        automaticallyImplyLeading: false,
+        // actions: <Widget>[
+        //   GestureDetector(
+        //     onTap: () {},
+        //     child: Icon(Icons.add, size: 35.0),
+        //   )
+        // ],
+      ),
+      body: Container(
+        padding: const EdgeInsets.all(8),
+        child: getbody(),
+      ),
+      bottomNavigationBar: Theme(
+        data: ThemeData(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
         ),
-        body: getbody(),
-       bottomNavigationBar: BottomNavigationBar(
-         
-        items: bottomNavBarItems,
-        type: BottomNavigationBarType.fixed,
-         onTap: (int index) async {
-        if (index == 0) {
-          await Navigator.push(
+        child: BottomNavigationBar(
+            items: bottomNavBarItems,
+            type: BottomNavigationBarType.fixed,
+            onTap: (int index) async {
+              if (index == 2) {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => WordCardInputFormPage()),
+                );
+              } else if (index == 4) {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProfileInfoPage()),
+                );
+              }
+              await setData();
+            }),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => WordCardInputFormPage()),
           );
-        } else if (index == 1) {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ProfileInfoPage()),
-          );
-        }
-        getWordCardData(categorySelect);
-      }
-      ),   floatingActionButton: FloatingActionButton(
-        onPressed: (){
-           Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => WordCardInputFormPage()),
-          );
-        } ,
+        },
         child: Icon(
           Icons.add,
           size: 36,
-          
         ),
         backgroundColor: Colors.yellow,
         foregroundColor: Colors.black,
-        
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
@@ -192,7 +242,7 @@ final List<BottomNavigationBarItem> bottomNavBarItems = [
           flex: -1,
           child: GridView.count(
             primary: false,
-            padding: const EdgeInsets.all(5),
+            padding: const EdgeInsets.all(4),
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
             shrinkWrap: true,
@@ -211,7 +261,10 @@ final List<BottomNavigationBarItem> bottomNavBarItems = [
                       Icons.supervised_user_circle,
                       size: 20,
                     ),
-                    Text("${cateName[1]}")
+                    Text(
+                      "${cateName[0].toUpperCase()}",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )
                   ]),
                   color: Colors.teal[100],
                 ),
@@ -225,66 +278,110 @@ final List<BottomNavigationBarItem> bottomNavBarItems = [
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   child: Column(children: [
-                    Icon(
-                      Icons.supervised_user_circle,
-                      size: 20,
-                    ),
-                    Text("${cateName[1]}")
+                    Icon(Icons.star_rate_rounded,
+                        color: Color(0xFFFF3377), size: 24),
+                    Text(
+                      "${cateName[1].toUpperCase()}",
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Color(0xFFFF3377)),
+                    )
                   ]),
                   color: Colors.teal[100],
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.all(8),
-                child: Column(children: [
-                  Icon(
-                    Icons.supervised_user_circle,
-                    size: 20,
-                  ),
-                  Text("${cateName[1]}",overflow: TextOverflow.fade,maxLines: 3,
-                  softWrap: false)
-                ]),
-                color: Colors.teal[100],
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    categorySelect = 2;
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(children: [
+                    Icon(
+                      Icons.supervised_user_circle,
+                      size: 20,
+                    ),
+                    Text("${cateName[2].toUpperCase()}",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.fade,
+                        maxLines: 3,
+                        softWrap: false)
+                  ]),
+                  color: Colors.teal[100],
+                ),
               ),
-              Container(
-                padding: const EdgeInsets.all(8),
-                child: Column(children: [
-                  Icon(
-                    Icons.supervised_user_circle,
-                    size: 20,
-                  ),
-                  Text("${cateName[1]}",overflow: TextOverflow.fade,maxLines: 3,
-                  softWrap: false)
-                ]),
-                color: Colors.teal[100],
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    categorySelect = 3;
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(children: [
+                    Icon(
+                      Icons.supervised_user_circle,
+                      size: 20,
+                    ),
+                    Text("${cateName[3].toUpperCase()}",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.fade,
+                        maxLines: 3,
+                        softWrap: false)
+                  ]),
+                  color: Colors.teal[100],
+                ),
               ),
-              Container(
-                padding: const EdgeInsets.all(8),
-                child: Column(children: [
-                  Icon(
-                    Icons.supervised_user_circle,
-                    size: 20,
-                  ),
-                  Text("${cateName[1]}",overflow: TextOverflow.fade,maxLines: 3,
-                  softWrap: false)
-                ]),
-                color: Colors.teal[100],
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    categorySelect = 4;
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(children: [
+                    Icon(
+                      Icons.supervised_user_circle,
+                      size: 20,
+                    ),
+                    Text("${cateName[4].toUpperCase()}",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.fade,
+                        maxLines: 3,
+                        softWrap: false)
+                  ]),
+                  color: Colors.teal[100],
+                ),
               ),
-              Container(
-                padding: const EdgeInsets.all(8),
-                child: Column(children: [
-                  Icon(
-                    Icons.supervised_user_circle,
-                    size: 20,
-                  ),
-                  Text("${cateName[1]}",overflow: TextOverflow.fade,maxLines: 3,
-                  softWrap: false)
-                ]),
-                color: Colors.teal[100],
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    categorySelect = 5;
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(children: [
+                    Icon(
+                      Icons.supervised_user_circle,
+                      size: 20,
+                    ),
+                    Text("${cateName[5].toUpperCase()}",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.fade,
+                        maxLines: 3,
+                        softWrap: false)
+                  ]),
+                  color: Colors.teal[100],
+                ),
               ),
             ],
           )),
-      Text('Category: $categoryText', style: TextStyle(fontSize: 14)),
+      Container(
+          padding: EdgeInsets.only(top: 12),
+          child: Text('CATEGORY: ${categoryText.toUpperCase()}',
+              style: TextStyle(fontSize: 14))),
       Expanded(
         flex: 8,
         child: FutureBuilder(
@@ -305,26 +402,25 @@ final List<BottomNavigationBarItem> bottomNavBarItems = [
                         ),
                       );
                     },
-                    
-                    onLongPress: (){
+                    onLongPress: () {
                       print("DDDD");
                     },
                     leading: Icon(Icons.book_rounded, size: 36),
                     title: Text(
-                      wordcardInfo[index]['wordcard_name'],
+                      wordcardInfo[index]['wordcard_name'].toUpperCase(),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     subtitle: Text(
-                      wordcardInfo[index]['wordcard_topic'],
+                      wordcardInfo[index]['wordcard_topic'].toUpperCase(),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.purple.shade800,
                       ),
                     ),
                     trailing: Text(
-                      '${wordcardInfo[index]['wordcard_word'].toString()} word',
+                      '${wordcardInfo[index]['wordcard_word'].toString()} WORD',
                     ),
                   );
                 },
@@ -339,9 +435,6 @@ final List<BottomNavigationBarItem> bottomNavBarItems = [
       ),
     ]);
   }
-
-
-
 
   Widget bottom(BuildContext context) {
     return BottomNavigationBar(
@@ -369,12 +462,12 @@ final List<BottomNavigationBarItem> bottomNavBarItems = [
       ],
       selectedItemColor: Colors.amber[800],
       onTap: (int index) async {
-        if (index == 1) {
+        if (index == 3) {
           await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => WordCardInputFormPage()),
           );
-        } else if (index == 2) {
+        } else if (index == 4) {
           await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => ProfileInfoPage()),
@@ -391,4 +484,3 @@ final List<BottomNavigationBarItem> bottomNavBarItems = [
     "250",
   ];
 }
-

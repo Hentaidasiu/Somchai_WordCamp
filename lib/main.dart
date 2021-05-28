@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:somchai_wordcamp/WordCard.dart';
-import 'package:somchai_wordcamp/home.dart';
 import 'package:flutter_overboard/flutter_overboard.dart';
+
+//Page
+import 'package:somchai_wordcamp/home.dart';
 
 void main() {
   runApp(MyApp());
