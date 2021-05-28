@@ -40,19 +40,19 @@ class _MyHomePageState extends State<MyHomePage> {
   final pages = [
     PageModel(
         color: const Color(0xFF0097A7),
-        imageAssetPath: 'assets/landing/a01.png',
+        imageAssetPath: 'assets/landing/d01.png',
         title: 'SOMCHAI WORDCAMP',
         body: 'App that can improve your memory skill.',
         doAnimateImage: true),
     PageModel(
         color: const Color(0xFF536DFE),
-        imageAssetPath: 'assets/landing/a02.png',
+        imageAssetPath: 'assets/landing/d02.png',
         title: 'WordCard Storage',
         body: 'Storage words in many WordCard.',
         doAnimateImage: true),
     PageModel(
         color: const Color(0xFF9B90BC),
-        imageAssetPath: 'assets/landing/a03.png',
+        imageAssetPath: 'assets/landing/d03.png',
         title: 'Test your memory.',
         body: 'Get a test by using word in WordCard.',
         doAnimateImage: true),
