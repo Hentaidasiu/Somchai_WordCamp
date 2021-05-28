@@ -120,6 +120,26 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
                     }
                   },
                 ),
+                FutureBuilder(
+                  future: getWordList(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      return Center(
+                        child: Text('$wordList'),
+                      );
+                      // return ListView.builder(
+                      //   itemCount: wordList.length,
+                      //   itemBuilder: (BuildContext context, int index) {
+                      //     return here;
+                      //   },
+                      // );
+                    } else {
+                      return Center(
+                        child: Text('No Word Found'),
+                      );
+                    }
+                  },
+                ),
               ]),
             ),
           ],
