@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:popup_menu/popup_menu.dart';
+
 //Database
 import 'database/database.dart';
 
@@ -11,16 +12,23 @@ import 'WordCard.dart';
 
 class HomePage extends StatefulWidget {
   //Value
-  final Map<String, dynamic> myWeightRecord;
+  final Map<String, dynamic> userData;
 
   //Constructer
-  HomePage({Key key, this.myWeightRecord}) : super(key: key);
+  HomePage({Key key, this.userData}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState(userData);
 }
 
 class _HomePageState extends State<HomePage> {
+  //Constructer
+  _HomePageState(this.userData) {
+    username = userData['user_name'];
+    usercoin = userData['user_coin'];
+    userlevel = userData['user_level'];
+  }
+
   //Database
   final dbHelper = DatabaseHelper.instance;
 
@@ -121,7 +129,7 @@ class _HomePageState extends State<HomePage> {
           )),
       BottomNavigationBarItem(
           icon: Icon(Icons.add, color: Colors.white),
-          title: Text("ADD", style: TextStyle(color: Colors.white))),
+          title: Text("", style: TextStyle(color: Colors.white))),
       BottomNavigationBarItem(icon: Icon(Icons.add), title: Text("ADD")),
       BottomNavigationBarItem(icon: Icon(Icons.message), title: Text("GAME")),
       BottomNavigationBarItem(icon: Icon(Icons.person), title: Text("PROFILE")),
@@ -169,7 +177,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    getUserData();
+    // getUserData();
     getWordCardData(categorySelect);
     bottomNavSet();
 
@@ -282,7 +290,10 @@ class _HomePageState extends State<HomePage> {
                         color: Color(0xFFFF3377), size: 24),
                     Text(
                       "${cateName[1].toUpperCase()}",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Color(0xFFFF3377)),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                          color: Color(0xFFFF3377)),
                     )
                   ]),
                   color: Colors.teal[100],

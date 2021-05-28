@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_overboard/flutter_overboard.dart';
 
+//Database
+import 'database/database.dart';
+
 //Page
 import 'package:somchai_wordcamp/home.dart';
 
@@ -30,6 +33,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  //Database
+  final dbHelper = DatabaseHelper.instance;
+
   //Value
   final pages = [
     PageModel(
@@ -51,8 +57,19 @@ class _MyHomePageState extends State<MyHomePage> {
         body: 'Get a test by using word in WordCard.',
         doAnimateImage: true),
   ];
+  Map<String, dynamic> userData = {};
 
   //Function
+  Future<void> getUserData() async {
+    userData = await dbHelper.queryUserData();
+  }
+  
+  @override
+  void initState() {
+    getUserData();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,18 +78,12 @@ class _MyHomePageState extends State<MyHomePage> {
         pages: pages,
         showBullets: true,
         skipCallback: () {
-          // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          //   content: Text('Skipped.'),
-          // ));
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => HomePage()));
+              context, MaterialPageRoute(builder: (context) => HomePage(userData: userData)));
         },
         finishCallback: () {
-          //  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          //     content: Text('Finished.'),
-          //   ));
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => HomePage()));
+              context, MaterialPageRoute(builder: (context) => HomePage(userData: userData)));
         },
       ),
     );
