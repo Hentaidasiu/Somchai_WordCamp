@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:popup_menu/popup_menu.dart';
@@ -7,6 +9,7 @@ import 'database/database.dart';
 //Page
 import 'profile.dart';
 import 'bottomsheet/wordcardInput.dart';
+import 'bottomsheet/wordcardEdit.dart';
 import 'WordCard.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,18 +26,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   //Database
   final dbHelper = DatabaseHelper.instance;
-
+  
   //Value
   Map<String, dynamic> userData = {};
   List<String> cateName = ["All", "FAV1", "FAV2", "FAV3", "FAV4", "FAV5"];
-  List<String> wordCardName = [
-    "English1",
-    "CAL1",
-    "SCI2",
-    "THAI1",
-    "JAPAN2",
-    "Russian5"
-  ];
+  int MenuSelect ;
   List<Map<String, dynamic>> wordcardInfo = [];
   int categorySelect = 0;
   String categoryText = 'All';
@@ -128,14 +124,14 @@ class _HomePageState extends State<HomePage> {
     ];
   }
 
-  void showPopup(Offset offset) {
+  void showPopup(Offset offset ,context ) {
     PopupMenu menu = PopupMenu(
         // backgroundColor: Colors.teal,
         // lineColor: Colors.tealAccent,
         maxColumn: 3,
         items: [
-          MenuItem(title: 'Copy', image: Image.asset('assets/copy.png')),
-          MenuItem(title: 'Mail', image: Icon(Icons.mail, color: Colors.white)),
+          MenuItem(title: 'Edit', image: Icon(Icons.mail, color: Colors.white)),
+          MenuItem(title: 'Delete', image: Icon(Icons.book_online_rounded, color: Colors.white)),
           MenuItem(
               title: 'Power',
               image: Icon(
@@ -151,10 +147,21 @@ class _HomePageState extends State<HomePage> {
 
   void stateChanged(bool isShow) {
     print('menu is ${isShow ? 'showing' : 'closed'}');
+ 
   }
 
   void onClickMenu(MenuItemProvider item) {
     print('Click menu -> ${item.menuTitle}');
+      if(item.menuTitle == "Edit"){
+      var deleteID = wordcardInfo[MenuSelect]["wordcard_ID"];
+      Navigator.push(context,MaterialPageRoute(builder: (context) => WordCardEditFormPage(deleteID : deleteID)),);
+      }
+      else if (item.menuTitle == "Delete"){
+        var deleteID = wordcardInfo[MenuSelect]["wordcard_ID"];
+        List<Map<String, dynamic>>.from(wordcardInfo).removeAt(MenuSelect);
+        MenuSelect = 0;
+        var blank = dbHelper.deleteWordCardData(deleteID);
+      }
   }
 
   void onDismiss() {
@@ -179,6 +186,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     PopupMenu.context = context;
+
     return Scaffold(
       appBar: AppBar(
         title: Center(child: Text("Somchai WordCard")),
@@ -282,7 +290,10 @@ class _HomePageState extends State<HomePage> {
                         color: Color(0xFFFF3377), size: 24),
                     Text(
                       "${cateName[1].toUpperCase()}",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Color(0xFFFF3377)),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                          color: Color(0xFFFF3377)),
                     )
                   ]),
                   color: Colors.teal[100],
@@ -391,7 +402,13 @@ class _HomePageState extends State<HomePage> {
               return ListView.builder(
                 itemCount: wordcardInfo.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
+                  return MaterialButton(
+                      child: GestureDetector(
+                    onLongPressEnd: (LongPressEndDetails details) {
+                      MenuSelect = index;
+                      showPopup(details.globalPosition,context );
+                    },
+                    child: ListTile(
                     onTap: () {
                       Navigator.push(
                         context,
@@ -402,9 +419,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       );
                     },
-                    onLongPress: () {
-                      print("DDDD");
-                    },
+                    
                     leading: Icon(Icons.book_rounded, size: 36),
                     title: Text(
                       wordcardInfo[index]['wordcard_name'].toUpperCase(),
@@ -422,7 +437,8 @@ class _HomePageState extends State<HomePage> {
                     trailing: Text(
                       '${wordcardInfo[index]['wordcard_word'].toString()} WORD',
                     ),
-                  );
+                  )
+                  ));
                 },
               );
             } else {
@@ -484,3 +500,6 @@ class _HomePageState extends State<HomePage> {
     "250",
   ];
 }
+
+
+
