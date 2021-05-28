@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:somchai_wordcamp/bottomsheet/AddNewWord.dart';
 
 //Database
 import 'database/database.dart';
@@ -44,6 +43,8 @@ class WordTestPageState extends State<WordTestPage> {
   List<int> trueanswerList = [];
   bool isTime, isShowAnswer, isRandom;
   int wordCardID, questionTotal;
+  int questionI = 0;
+  int score = 0;
 
   WordTest createdWordTest;
 
@@ -77,54 +78,47 @@ class WordTestPageState extends State<WordTestPage> {
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+              color: Colors.grey[400],
+              padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
               child: Row(
                 children: [
                   Expanded(
-                      child: Center(
-                          child: Text(
-                    'Times left',
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                  ))),
+                    flex: 3,
+                    child: Text(
+                      'Q: ${questionI + 1}/$questionTotal',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                   Expanded(
-                      child: Center(
-                          child: Text(
-                    '1/10',
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                  )))
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-              child: Row(
-                children: [
+                    child: Center(
+                      child: Text(
+                        '+TIME',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
                   Expanded(
-                      flex: 3,
-                      child: Center(
-                        child: Icon(
-                          Icons.timer,
-                          size: 100,
-                        ),
-                      )),
+                    child: Center(
+                      child: Text(
+                        'HINT',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
                   Expanded(
-                      child: Center(
-                          child: Text(
-                    'Buy time',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ))),
-                  Expanded(
-                      child: Center(
-                          child: Text(
-                    'Hint',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ))),
-                  Expanded(
-                      child: Center(
-                          child: Text(
-                    'Skip',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ))),
+                    child: Center(
+                      child: Text(
+                        'SKIP',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -134,90 +128,117 @@ class WordTestPageState extends State<WordTestPage> {
       ),
     );
   }
-}
 
-Widget getQuestion(BuildContext context){
-  return Container(
-    child: Column(
-      children: [
-        Container(
-          padding: EdgeInsets.fromLTRB(0, 55, 0, 55),
-          child: Text(
-            '1. qwertyuiopasdfg',
-            style: TextStyle(fontSize: 40),
-          ),
-        ),
-        Container(
-          child: Column(
-            children: [
-              Container(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        child: Container(
-                          child: Center(
-                            child: Text('กำไดใครก่อ', style: TextStyle(fontSize: 20),)),
-                            color: Colors.green[300],
-                            padding: EdgeInsets.fromLTRB(0, 90, 0, 90),
-                        ),
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage()),);
-                        },
-                      )
-                    ),
-                    Expanded(
-                      child: GestureDetector(
-                        child: Container(
-                          child: Center(
-                            child: Text('กำไดใครก่อ', style: TextStyle(fontSize: 20),)),
-                            color: Colors.red[300],
-                            padding: EdgeInsets.fromLTRB(0, 90, 0, 90),
-                        ),
-                        onTap: (){
-
-                        },
-                      )
-                    )
-                  ],
+  Widget getQuestion(BuildContext context) {
+    return Container(
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.fromLTRB(0, 80, 0, 80),
+            child: Expanded(
+              flex: 10,
+              child: Container(
+                child: Text(
+                  '${questionI + 1}. ${questionList[questionI]}',
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                 ),
               ),
-              Container(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        child: Container(
-                          child: Center(
-                            child: Text('กำไดใครก่อ', style: TextStyle(fontSize: 20),)),
-                            color: Colors.blue[300],
-                            padding: EdgeInsets.fromLTRB(0, 90, 0, 90),
-                        ),
-                        onTap: (){
-
-                        },
-                      )
-                    ),
-                    Expanded(
-                      child: GestureDetector(
-                        child: Container(
-                          child: Center(
-                            child: Text('กำไดใครก่อ', style: TextStyle(fontSize: 20),)),
-                            color: Colors.yellow[300],
-                            padding: EdgeInsets.fromLTRB(0, 90, 0, 90),
-                        ),
-                        onTap: (){
-
-                        },
-                      )
-                    )
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
-        )
-      ],
-    ),
-  );
+          Container(
+            child: LinearProgressIndicator(
+              value: 0.4,
+              minHeight: 10,
+              backgroundColor: Colors.white,
+              valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
+            ),
+          ),
+          Container(
+            child: Column(
+              children: [
+                Container(
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: GestureDetector(
+                        child: Container(
+                          child: Center(
+                              child: Flexible(
+                            child: Text(
+                              '${answerList[questionI][0]}',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          )),
+                          color: Colors.green[300],
+                          padding: EdgeInsets.fromLTRB(0, 64, 0, 64),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ResultPage()),
+                          );
+                        },
+                      )),
+                      Expanded(
+                          child: GestureDetector(
+                        child: Container(
+                          child: Center(
+                              child: Flexible(
+                            child: Text(
+                              '${answerList[questionI][1]}',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          )),
+                          color: Colors.red[300],
+                          padding: EdgeInsets.fromLTRB(0, 64, 0, 64),
+                        ),
+                        onTap: () {},
+                      ))
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: GestureDetector(
+                        child: Container(
+                          child: Center(
+                              child: Flexible(
+                            child: Text(
+                              '${answerList[questionI][2]}',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          )),
+                          color: Colors.blue[300],
+                          padding: EdgeInsets.fromLTRB(0, 64, 0, 64),
+                        ),
+                        onTap: () {},
+                      )),
+                      Expanded(
+                          child: GestureDetector(
+                        child: Container(
+                          child: Center(
+                              child: Flexible(
+                            child: Text(
+                              '${answerList[questionI][3]}',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          )),
+                          color: Colors.yellow[300],
+                          padding: EdgeInsets.fromLTRB(0, 64, 0, 64),
+                        ),
+                        onTap: () {},
+                      ))
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
 }

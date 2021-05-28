@@ -36,6 +36,7 @@ dependencies:
   fluttertoast: ^8.0.7
   flutter_overboard: ^2.0.1
   focused_menu: ^1.0.5
+  auto_size_text: ^2.1.0
 
 dev_dependencies:
   flutter_test:
