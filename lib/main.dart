@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:somchai_wordcamp/WordCard.dart';
 import 'package:somchai_wordcamp/home.dart';
+import 'package:flutter_overboard/flutter_overboard.dart';
 
 void main() {
   runApp(MyApp());
@@ -29,63 +30,49 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   //Value
+  final pages = [
+    PageModel(
+        color: const Color(0xFF0097A7),
+        imageAssetPath: 'assets/landing/a01.png',
+        title: 'SOMCHAI WORDCAMP',
+        body: 'App that can improve your memory skill.',
+        doAnimateImage: true),
+    PageModel(
+        color: const Color(0xFF536DFE),
+        imageAssetPath: 'assets/landing/a02.png',
+        title: 'WordCard Storage',
+        body: 'Storage words in many WordCard.',
+        doAnimateImage: true),
+    PageModel(
+        color: const Color(0xFF9B90BC),
+        imageAssetPath: 'assets/landing/a03.png',
+        title: 'Test your memory.',
+        body: 'Get a test by using word in WordCard.',
+        doAnimateImage: true),
+  ];
 
   //Function
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Container(
-          child: Column(
-            children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => HomePage()));
-                },
-                icon: Icon(Icons.home),
-                label: Text('Home'),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.grey[600],
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 30, vertical: 10), //ตามแกน
-                  shape: RoundedRectangleBorder(
-                      borderRadius: (BorderRadius.circular(5.0))),
-                  textStyle: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              //-------------------------------------MemorycardButtonBelow----------------------------------------
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => WordCardDetailPage()));
-                },
-                icon: Icon(Icons.home),
-                label: Text('MemoryCard'),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.grey[600],
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 30, vertical: 10), //ตามแกน
-                  shape: RoundedRectangleBorder(
-                      borderRadius: (BorderRadius.circular(5.0))),
-                  textStyle: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+      body: OverBoard(
+        pages: pages,
+        showBullets: true,
+        skipCallback: () {
+          // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          //   content: Text('Skipped.'),
+          // ));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => HomePage()));
+        },
+        finishCallback: () {
+          //  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          //     content: Text('Finished.'),
+          //   ));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => HomePage()));
+        },
       ),
     );
   }
