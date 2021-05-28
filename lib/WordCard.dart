@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:somchai_wordcamp/bottomsheet/AddNewWord.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:focused_menu/focused_menu.dart';
 
 //Page
 import 'test.dart';
@@ -79,22 +80,18 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
                 Container(
                   //padding: EdgeInsets.fromLTRB(left, top, right, bottom),
                   child: Text(
-                    "Words",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    "  Words",
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Spacer(),
                 Container(
                   child: Text(
-                    "Meaning",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    "Meaning ",
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                   ),
                 ),
               ],
-            ),
-            Divider(
-              color: Colors.grey[600],
-              thickness: 3,
             ),
             Container(
               width: double.infinity,
@@ -124,16 +121,75 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
                   future: getWordList(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
-                      print(wordList[0]['word_word']);
-                      return Center(
-                        child: Text('eiei')
-                      );
-                      // return ListView.builder(
-                      //   itemCount: wordList.length,
-                      //   itemBuilder: (BuildContext context, int index) {
-                      //     return here;
-                      //   },
+                      print(wordList);
+                      // return Center(
+                      //   child: ListTile(
+                      //     title: Text('${wordList[0]['word_word']} (${wordList[0]['word_']})'),
+                      //   )
                       // );
+                      return Container(
+                        height: 709,
+                        child: ListView.builder(
+                          itemCount: wordList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Column(
+                              children: [
+                                ListTile(
+                                  title:
+                                      Text('${wordList[index]['word_word']}'),
+                                  subtitle: Text(
+                                      '(${wordList[index]['word_pronunce']})'),
+                                  trailing: Text(
+                                      '${wordList[index]['word_meaning']}'),
+                                  onLongPress: () {
+                                    return showMenu(
+                                        context: context,
+                                        position:
+                                            RelativeRect.fromLTRB(0, 349, 0, 0),
+                                        items: [
+                                          PopupMenuItem<int>(
+                                            value: 0,
+                                            child: GestureDetector(
+                                              child: ListTile(
+                                                leading: Text(
+                                                  "Edit",
+                                                  style:
+                                                      TextStyle(fontSize: 30),
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                print(
+                                                    'ID : ${wordList[index]['word_ID']}');
+                                              },
+                                            ),
+                                          ),
+                                          PopupMenuItem<int>(
+                                            value: 0,
+                                            child: GestureDetector(
+                                              child: ListTile(
+                                                leading: Text(
+                                                  "Delete",
+                                                  style:
+                                                      TextStyle(fontSize: 30),
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                print(
+                                                    'ID : ${wordList[index]['word_ID']}');
+                                              },
+                                            ),
+                                          ),
+                                        ]);
+                                  },
+                                ),
+                                Divider(
+                                  thickness: 3,
+                                )
+                              ],
+                            );
+                          },
+                        ),
+                      );
                     } else {
                       return Center(
                         child: Text('No Word Found'),
