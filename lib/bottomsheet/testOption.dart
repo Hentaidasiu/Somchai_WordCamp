@@ -9,18 +9,19 @@ import '../database/database.dart';
 
 class TestOptionPage extends StatefulWidget {
   final int wordCardID;
+  final String wordCardName;
   final List<Map<String, dynamic>> wordList;
 
-  TestOptionPage({Key key, this.wordCardID, this.wordList}) : super(key: key);
+  TestOptionPage({Key key, this.wordCardName, this.wordCardID, this.wordList}) : super(key: key);
 
   @override
   TestOptionPageState createState() =>
-      TestOptionPageState(wordCardID, wordList);
+      TestOptionPageState(wordCardName, wordCardID, wordList);
 }
 
 class TestOptionPageState extends State<TestOptionPage> {
   //Constructer
-  TestOptionPageState(this.wordCardID, this.wordList);
+  TestOptionPageState(this.wordCardName, this.wordCardID, this.wordList);
 
   //Database
   final dbHelper = DatabaseHelper.instance;
@@ -28,6 +29,7 @@ class TestOptionPageState extends State<TestOptionPage> {
   //Value
   List<Map<String, dynamic>> wordList;
   List<bool> groupSelected = [false, false, false];
+  String wordCardName;
   bool isTime = false;
   bool isShowAnswer = false;
   bool isRandom = false;
@@ -44,11 +46,12 @@ class TestOptionPageState extends State<TestOptionPage> {
         color: Colors.white,
         child: Column(
           children: <Widget>[
-            Text(
-              'Test Settings',
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
+            Flexible(
+                          child: Text(
+                '$wordCardName''s Test Settings',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             SizedBox(height: 8),
@@ -150,6 +153,7 @@ class TestOptionPageState extends State<TestOptionPage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => WordTestPage(
+                            wordCardName: wordCardName,
                             wordCardID: wordCardID,
                             wordList: wordList,
                             questionTotal: qTotal,
