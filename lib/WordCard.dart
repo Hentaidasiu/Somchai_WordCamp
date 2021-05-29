@@ -47,7 +47,7 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
 
   Future<bool> deleteWordData(int value) async {
     int id = await dbHelper.deleteWordData(value, wordCardID);
-    print(id);
+    // print(id);
 
     return true;
   }
@@ -121,7 +121,7 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
                   future: getWordList(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
-                      print(wordList);
+                      // print(wordList);
                       // return Center(
                       //   child: ListTile(
                       //     title: Text('${wordList[0]['word_word']} (${wordList[0]['word_']})'),
@@ -158,8 +158,8 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
                                                 ),
                                               ),
                                               onTap: () {
-                                                print(
-                                                    'ID : ${wordList[index]['word_ID']}');
+                                                // print(
+                                                //     'ID : ${wordList[index]['word_ID']}');
                                               },
                                             ),
                                           ),
@@ -174,8 +174,8 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
                                                 ),
                                               ),
                                               onTap: () {
-                                                print(
-                                                    'ID : ${wordList[index]['word_ID']}');
+                                                // print(
+                                                //     'ID : ${wordList[index]['word_ID']}');
                                               },
                                             ),
                                           ),
@@ -249,7 +249,7 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
                 duration: Duration(milliseconds: 250), //popup speed
                 context: context,
                 builder: (context) =>
-                    TestOptionPage(wordCardID: wordCardID, wordList: wordList),
+                    TestOptionPage(wordCardName: wordCardName, wordCardID: wordCardID, wordList: wordList),
               );
             }
           } else if (index == 3) {

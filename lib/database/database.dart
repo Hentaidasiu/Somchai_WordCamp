@@ -96,7 +96,7 @@ class DatabaseHelper {
     List<Map<String, dynamic>> user = await db.rawQuery('SELECT * FROM user WHERE user_ID = 1');
     Map<String, dynamic> userData = user[id];
 
-    int newXP = userData['user_exp'] + gainXP;
+    int newXP = userData['user_exp'].toInt() + gainXP;
     int newLevel = userData['user_level'];
     while (newXP >= levelCap(newLevel)) {
       newXP = newXP - levelCap(newLevel);
@@ -127,6 +127,7 @@ class DatabaseHelper {
     Map<String, dynamic> newCoinData = {
       'user_coin': newCoin
     };
+    // print(newCoinData);
 
     if (newCoin >= 0) {
       var returnID = await db.update('user', newCoinData, where: 'user_ID = ?', whereArgs: [id]);
@@ -151,7 +152,7 @@ class DatabaseHelper {
 
   //Get XP Range
   int levelCap(int level) {
-    int power = pow(2, level-2);
+    int power = pow(2, level-2).toInt();
     return 100 * power;
   }
 
@@ -206,13 +207,13 @@ class DatabaseHelper {
     };
 
     favorite['wordcard_ID'] = insertID;
-    print(favorite);
+    // print(favorite);
 
     int detailID = await db.insert('wordcard_detail', detailRow);
-    print(detailID);
+    // print(detailID);
 
     int favoriteID = await db.insert('favorite_group', favorite);
-    print(favoriteID);
+    // print(favoriteID);
 
     return insertID;
   }
@@ -225,21 +226,23 @@ class DatabaseHelper {
   }
 
   //WordCard: update detail
-  Future<int> updateWordCardDetail(int id, int mode, int score, int getscore) async {
+  Future<int> updateWordCardDetail(int id, int fullscore, int getscore) async {
     Database db = await instance.database;
 
-    List<Map<String, dynamic>> row = await db.rawQuery('SELECT * FROM wordcard WHERE wordcard_ID = $id');
+    List<Map<String, dynamic>> row = await db.rawQuery('SELECT * FROM wordcard_detail WHERE wordcard_ID = $id');
     Map<String, dynamic> wordRow = row[0];
-    
-    int newN = wordRow['wordcard_detail_testedall'] + 1;
-    int newAccuary = int.parse(((wordRow['wordcard_detail_testedall'] * wordRow['wordcard_detail_accuary']) + (getscore / score)) / newN);
-    int newHighscore = (wordRow['wordcard_detail_highscore'] > getscore) ? wordRow['wordcard_detail_highscore'] : getscore;
+
+    int newN = wordRow['wordcard_detail_testedall'].toInt();
+    newN = newN + 1;
+    int newAccuary = ((((wordRow['wordcard_detail_testedall'] * wordRow['wordcard_detail_accuary']) + (getscore / fullscore)) / newN) * 100).toInt();
+    int newHighscore = (wordRow['wordcard_detail_highscore'].toInt() > getscore) ? wordRow['wordcard_detail_highscore'].toInt() : getscore;
 
     Map<String, dynamic> newRow = {
       'wordcard_detail_testedall': newN,
       'wordcard_detail_accuary': newAccuary,
       'wordcard_detail_highscore': newHighscore
     };
+    // print(newRow);
 
     return await db.update('wordcard_detail', newRow, where: 'wordcard_ID = ?', whereArgs: [id]);
   }

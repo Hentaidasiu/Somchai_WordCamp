@@ -11,11 +11,13 @@ import './resultPage.dart';
 
 class WordTestPage extends StatefulWidget {
   final List<Map<String, dynamic>> wordList;
+  final String wordCardName;
   final bool isTime, isShowAnswer, isRandom;
   final int wordCardID, questionTotal;
 
   WordTestPage(
       {Key key,
+      this.wordCardName,
       this.wordCardID,
       this.wordList,
       this.questionTotal,
@@ -26,12 +28,12 @@ class WordTestPage extends StatefulWidget {
 
   @override
   WordTestPageState createState() => WordTestPageState(
-      wordCardID, wordList, questionTotal, isTime, isShowAnswer, isRandom);
+      wordCardName, wordCardID, wordList, questionTotal, isTime, isShowAnswer, isRandom);
 }
 
 class WordTestPageState extends State<WordTestPage> {
   //Constructer
-  WordTestPageState(this.wordCardID, this.wordList, this.questionTotal,
+  WordTestPageState(this.wordCardName, this.wordCardID, this.wordList, this.questionTotal,
       this.isTime, this.isShowAnswer, this.isRandom) {
     createdWordTest = new WordTest(wordList, questionTotal, isRandom);
   }
@@ -41,12 +43,39 @@ class WordTestPageState extends State<WordTestPage> {
   List<String> questionList = [];
   List<List<String>> answerList = [];
   List<int> trueanswerList = [];
+  List<int> myanswerList = [];
+  String wordCardName;
   bool isTime, isShowAnswer, isRandom;
   int wordCardID, questionTotal;
   int questionI = 0;
   int score = 0;
+  int coin = 0;
+  int xp = 0;
 
   WordTest createdWordTest;
+
+  //Function
+  void answer(int choice) {
+    if (choice == trueanswerList[questionI]) {
+      score = score + 1;
+      xp = xp + 5;
+      coin = coin + 3;
+    } else {
+      xp = xp + 3;
+      coin = coin + 1;
+    }
+
+    if (questionI + 1 == questionTotal) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ResultPage(wordCardName: wordCardName, wordCardID: wordCardID, fullScore: questionTotal, getScore: score, getXP: xp, getCoin: coin)),
+      );
+    } else {
+      setState(() {
+        questionI = questionI + 1;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -63,17 +92,15 @@ class WordTestPageState extends State<WordTestPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Test Page',
-          style: TextStyle(fontSize: 30),
+        title: Center(
+          child: Flexible(
+                      child: Text(
+              '$wordCardName''s Test',
+            ),
+          ),
         ),
+        automaticallyImplyLeading: false,
       ),
-      // body: Column(children: [
-      //   Text(questionList.toString()),
-      //   Text(answerList.toString()),
-      //   Text(trueanswerList.toString()),
-      //   Text(questionTotal.toString()),
-      //])
       body: Container(
         child: Column(
           children: [
@@ -166,18 +193,13 @@ class WordTestPageState extends State<WordTestPage> {
                               child: Flexible(
                             child: Text(
                               '${answerList[questionI][0]}',
-                              style: TextStyle(fontSize: 20),
                             ),
                           )),
                           color: Colors.green[300],
                           padding: EdgeInsets.fromLTRB(0, 64, 0, 64),
                         ),
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ResultPage()),
-                          );
+                          answer(0);
                         },
                       )),
                       Expanded(
@@ -187,13 +209,14 @@ class WordTestPageState extends State<WordTestPage> {
                               child: Flexible(
                             child: Text(
                               '${answerList[questionI][1]}',
-                              style: TextStyle(fontSize: 20),
                             ),
                           )),
                           color: Colors.red[300],
                           padding: EdgeInsets.fromLTRB(0, 64, 0, 64),
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          answer(1);
+                        },
                       ))
                     ],
                   ),
@@ -208,13 +231,14 @@ class WordTestPageState extends State<WordTestPage> {
                               child: Flexible(
                             child: Text(
                               '${answerList[questionI][2]}',
-                              style: TextStyle(fontSize: 20),
                             ),
                           )),
                           color: Colors.blue[300],
                           padding: EdgeInsets.fromLTRB(0, 64, 0, 64),
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          answer(2);
+                        },
                       )),
                       Expanded(
                           child: GestureDetector(
@@ -223,13 +247,14 @@ class WordTestPageState extends State<WordTestPage> {
                               child: Flexible(
                             child: Text(
                               '${answerList[questionI][3]}',
-                              style: TextStyle(fontSize: 20),
                             ),
                           )),
                           color: Colors.yellow[300],
                           padding: EdgeInsets.fromLTRB(0, 64, 0, 64),
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          answer(3);
+                        },
                       ))
                     ],
                   ),
