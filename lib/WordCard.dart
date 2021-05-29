@@ -56,7 +56,7 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
     setState(() {
       username = userData['user_name'];
       usercoin = userData['user_coin'];
-      
+      print(username);
       userlevel = userData['user_level'];
     });
   }
@@ -74,7 +74,7 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                       fontFamily: 'Kanit-Light')),
-              Text(username.toUpperCase(),
+              Text("${username.toUpperCase()}",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
