@@ -5,6 +5,7 @@ import 'package:focused_menu/focused_menu.dart';
 import 'package:popup_menu/popup_menu.dart';
 //Page
 import 'test.dart';
+import 'profile.dart';
 import 'bottomsheet/testOption.dart';
 import 'bottomsheet/editword.dart';
 //Database
@@ -120,18 +121,16 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
     PopupMenu menu = PopupMenu(
         // backgroundColor: Colors.teal,
         // lineColor: Colors.tealAccent,
-        maxColumn: 3,
+        maxColumn: 2,
         items: [
-          MenuItem(title: 'Edit', image: Icon(Icons.mail, color: Colors.white)),
+          MenuItem(
+              title: 'Edit',
+              textStyle: TextStyle(fontSize: 12.0, color: Colors.lime),
+              image: Icon(Icons.edit, color: Colors.lime)),
           MenuItem(
               title: 'Delete',
-              image: Icon(Icons.book_online_rounded, color: Colors.white)),
-          MenuItem(
-              title: 'Power',
-              image: Icon(
-                Icons.power,
-                color: Colors.white,
-              )),
+              textStyle: TextStyle(fontSize: 12.0, color: Colors.lime),
+              image: Icon(Icons.delete, color: Colors.lime)),
         ],
         onClickMenu: onClickMenu,
         stateChanged: stateChanged,
@@ -302,11 +301,11 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
             //   context,
             //   MaterialPageRoute(builder: (context) => WordCardPage()),
             // );
-          } else if (index == 1) {
-            // await Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => ProfileInfoPage()),
-            // );
+          } else if (index == 4) {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfileInfoPage()),
+            );
           } else if (index == 3) {
             // await Navigator.push(
             //   context,

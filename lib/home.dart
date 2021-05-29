@@ -207,7 +207,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Somchai WordCard"  ,style : TextStyle(fontFamily: 'Kanit-Light'))),
+        title: Center(child: Text("Somchai WordCard "  ,style : TextStyle(fontFamily: 'Kanit-Light'))),
         automaticallyImplyLeading: false,
         // actions: <Widget>[
         //   GestureDetector(

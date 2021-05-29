@@ -6,6 +6,7 @@ import 'database/database.dart';
 //Page
 import 'home.dart';
 
+
 class ResultPage extends StatefulWidget {
   final int wordCardID, fullScore, getScore, getXP, getCoin;
   final String wordCardName;

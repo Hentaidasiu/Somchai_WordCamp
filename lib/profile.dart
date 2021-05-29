@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'database/database.dart';
 
 class ProfileInfoPage extends StatefulWidget {
+
+
+
+  
   @override
   ProfileInfoPageState createState() => ProfileInfoPageState();
 }
@@ -16,8 +20,20 @@ class ProfileInfoPageState extends State<ProfileInfoPage> {
   Map<String, dynamic> userData;
   String user_name_update = '';
   List list = ["UserName"];
-
+  String username = 'Username';
+  int usercoin = 0;
+  int userlevel = 0;
   //Function
+  Future<void> getUserData() async {
+    userData = await dbHelper.queryUserData();
+
+    setState(() {
+      username = userData['user_name'];
+      usercoin = userData['user_coin'];
+      userlevel = userData['user_level'];
+    });
+  }
+
   Future<bool> readUserData() async {
     userData = await dbHelper.queryUserData();
     return true;
@@ -102,14 +118,14 @@ class ProfileInfoPageState extends State<ProfileInfoPage> {
                                 builder: (BuildContext context,
                                     AsyncSnapshot snapshot) {
                                   if (snapshot.hasData) {
-                                    return Text(userData.toString());
+                                    return Text("");
                                   } else {
                                     return Center(
                                       child: CircularProgressIndicator(),
                                     );
                                   }
                                 })),
-                        SizedBox(height: 16),
+               
                         ElevatedButton.icon(
                           onPressed: () {
                             updateUsername();
