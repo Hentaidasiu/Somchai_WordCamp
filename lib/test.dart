@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 //Database
@@ -27,14 +29,14 @@ class WordTestPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  WordTestPageState createState() => WordTestPageState(
-      wordCardName, wordCardID, wordList, questionTotal, isTime, isShowAnswer, isRandom);
+  WordTestPageState createState() => WordTestPageState(wordCardName, wordCardID,
+      wordList, questionTotal, isTime, isShowAnswer, isRandom);
 }
 
 class WordTestPageState extends State<WordTestPage> {
   //Constructer
-  WordTestPageState(this.wordCardName, this.wordCardID, this.wordList, this.questionTotal,
-      this.isTime, this.isShowAnswer, this.isRandom) {
+  WordTestPageState(this.wordCardName, this.wordCardID, this.wordList,
+      this.questionTotal, this.isTime, this.isShowAnswer, this.isRandom) {
     createdWordTest = new WordTest(wordList, questionTotal, isRandom);
   }
 
@@ -51,11 +53,35 @@ class WordTestPageState extends State<WordTestPage> {
   int score = 0;
   int coin = 0;
   int xp = 0;
+  int timeCount;
+  double timeCurve = 0;
 
   WordTest createdWordTest;
 
+  Timer _timer;
+
   //Function
+  void _startTimer() {
+    timeCount = 15;
+
+    if (_timer != null) {
+      _timer.cancel();
+    }
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (timeCount > 0) {
+          timeCount = timeCount - 1;
+        } else {
+          answer(4);
+        }
+        timeCurve = (15 - timeCount) / 15;
+      });
+    });
+  }
+
   void answer(int choice) {
+    _timer.cancel();
+
     if (choice == trueanswerList[questionI]) {
       score = score + 1;
       xp = xp + 5;
@@ -68,12 +94,20 @@ class WordTestPageState extends State<WordTestPage> {
     if (questionI + 1 == questionTotal) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ResultPage(wordCardName: wordCardName, wordCardID: wordCardID, fullScore: questionTotal, getScore: score, getXP: xp, getCoin: coin)),
+        MaterialPageRoute(
+            builder: (context) => ResultPage(
+                wordCardName: wordCardName,
+                wordCardID: wordCardID,
+                fullScore: questionTotal,
+                getScore: score,
+                getXP: xp,
+                getCoin: coin)),
       );
     } else {
       setState(() {
         questionI = questionI + 1;
       });
+      _startTimer();
     }
   }
 
@@ -84,7 +118,8 @@ class WordTestPageState extends State<WordTestPage> {
     answerList = createdWordTest.getAnswer();
     trueanswerList = createdWordTest.getTrueAnswer();
     questionTotal = questionList.length;
-
+    
+    _startTimer();
     super.initState();
   }
 
@@ -94,8 +129,8 @@ class WordTestPageState extends State<WordTestPage> {
       appBar: AppBar(
         title: Center(
           child: Flexible(
-                      child: Text(
-              '$wordCardName''s Test',
+            child: Text(
+              '$wordCardName' 's Test',
             ),
           ),
         ),
@@ -121,34 +156,43 @@ class WordTestPageState extends State<WordTestPage> {
                   ),
                   Expanded(
                     child: Center(
-                      child: Row(children: [Icon(Icons.more_time) ,Text(
-                          'TIME',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        )],
-                       
+                      child: Row(
+                        children: [
+                          Icon(Icons.more_time),
+                          Text(
+                            'TIME',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          )
+                        ],
                       ),
                     ),
                   ),
                   Expanded(
                     child: Center(
-                      child: Row(children: [Icon(Icons.lightbulb) ,Text(
-                          'Hint',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        )],
-                       
+                      child: Row(
+                        children: [
+                          Icon(Icons.lightbulb),
+                          Text(
+                            'Hint',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          )
+                        ],
                       ),
                     ),
                   ),
                   Expanded(
                     child: Center(
-                      child:  Row(children: [Icon(Icons.skip_next) ,Text(
-                          'SKIP',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        )],
-                       
+                      child: Row(
+                        children: [
+                          Icon(Icons.skip_next),
+                          Text(
+                            'SKIP',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          )
+                        ],
                       ),
                     ),
                   ),
@@ -180,7 +224,7 @@ class WordTestPageState extends State<WordTestPage> {
           ),
           Container(
             child: LinearProgressIndicator(
-              value: 0.4,
+              value: timeCurve,
               minHeight: 10,
               backgroundColor: Colors.white,
               valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
