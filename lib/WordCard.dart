@@ -41,6 +41,7 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
   int MenuSelect;
   int usercoin = 0;
   int userlevel = 0;
+  int  showIndex = 0;
   //Function
   Future<void> getWordCardData() async {
     wordcardInfo = await dbHelper.queryOneWordCardData(wordCardID);
@@ -184,7 +185,7 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
         ),
       ),
       body: Container(
-        color: Colors.grey[400],
+        color: Colors.lime[300],
         width: double.infinity,
         child: Column(
           children: [
@@ -192,17 +193,18 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  //padding: EdgeInsets.fromLTRB(left, top, right, bottom),
+                  padding: EdgeInsets.fromLTRB(100, 8, 8, 8),
                   child: Text(
                     "  Words",
-                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold,fontFamily: 'Kanit-Light'),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold,fontFamily: 'Kanit-Light'),
                   ),
                 ),
                 Spacer(),
                 Container(
+                  padding: EdgeInsets.fromLTRB(8, 8, 40, 8),
                   child: Text(
                     "Meaning ",
-                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold,fontFamily: 'Kanit-Light'),
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold,fontFamily: 'Kanit-Light'),
                   ),
                 ),
               ],
@@ -230,15 +232,19 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
                                 child: GestureDetector(
                               onLongPressEnd: (LongPressEndDetails details) {
                                 MenuSelect = index;
+                               
                                 showPopup(details.globalPosition, context);
                               },
                               child: Column(
                                 children: [
                                   ListTile(
+                                     leading: Text("${index+1}", style: TextStyle( fontFamily: 'Kanit-Light',fontSize: 20)),
                                     title:
                                         Text('${wordList[index]['word_word']}', style: TextStyle( fontWeight: FontWeight.bold,fontFamily: 'Kanit-Light',fontSize: 20)),
                                     subtitle: Text(
-                                        '(${wordList[index]['word_pronunce']})', style: TextStyle( fontWeight: FontWeight.bold,fontFamily: 'Kanit-Light')),
+                                        '${wordList[index]['word_pronunce']}', style: TextStyle( fontWeight: FontWeight.bold,fontFamily: 'Kanit-Light',
+                                    color: Colors.lime[800],
+                                  )),
                                     trailing: Text(
                                         '${wordList[index]['word_meaning']}', style: TextStyle( fontWeight: FontWeight.bold,fontFamily: 'Kanit-Light',fontSize: 20)),
                                   ),
@@ -345,7 +351,7 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
           Icons.add,
           size: 36,
         ),
-        backgroundColor: Colors.yellow,
+        backgroundColor: Colors.lime,
         foregroundColor: Colors.black,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

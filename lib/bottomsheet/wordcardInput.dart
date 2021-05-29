@@ -53,32 +53,30 @@ class WordCardInputFormPageState extends State<WordCardInputFormPage> {
               Text(
                 'Create new WordCard',
                 style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                ),
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Kanit-Light'),
               ),
-              SizedBox(height: 8),
-              Text(
-                'Create your new WordCard for storage your word.',
-                style: TextStyle(
-                  fontSize: 10,
-                ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                  '----------------------------------------------------------------'),
-              SizedBox(height: 8),
               Container(
-                padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                padding: const EdgeInsets.fromLTRB(8, 50, 8, 8),
                 child: Column(
                   children: [
-                    Text('WordCard Name:'),
-                    TextField(
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                   
+                   TextField(
+                      decoration: new InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                          borderRadius: BorderRadius.all(
+            Radius.circular(10.0)),
+                        ),
+                        
+                        hintText: 'Enter your WordCard Name',
                       ),
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontFamily: 'Kanit-Light'),
                       onChanged: (text) {
                         setState(() {
                           wordCardName = text;
@@ -86,13 +84,23 @@ class WordCardInputFormPageState extends State<WordCardInputFormPage> {
                       },
                     ),
                     SizedBox(height: 16),
-                    Text('WordCard Topic:'),
+
                     TextField(
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                      decoration: new InputDecoration(
+                        
+                        enabledBorder: OutlineInputBorder(
+                          
+                          borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                           borderRadius: BorderRadius.all(
+            Radius.circular(10.0)),
+                        ),
+                        hintText: 'Enter your WordCard Topic',
                       ),
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontFamily: 'Kanit-Light'),
                       onChanged: (text) {
                         setState(() {
                           wordCardTopic = text;
@@ -134,15 +142,17 @@ class WordCardInputFormPageState extends State<WordCardInputFormPage> {
                     insertWordCard();
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(
-                          'Congret! You have $wordCardName as a new WordCard.'),
+                          'Congret! You have $wordCardName as a new WordCard.',style: TextStyle(
+                      
+                          fontFamily: 'Kanit-Light'),),
                     ));
                     Navigator.pop(context);
                   }
                 },
                 icon: Icon(Icons.save),
-                label: Text('Save'),
+                label: Text('Save' ),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.green.shade600,
+                  primary: Colors.lime,
                   padding: EdgeInsets.symmetric(horizontal: 55, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),

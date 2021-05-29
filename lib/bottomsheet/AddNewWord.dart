@@ -44,7 +44,7 @@ class _AddNewWordPageState extends State<AddNewWordPage> {
     return Material(
       child: Container(
         height: 480,
-        padding: EdgeInsets.fromLTRB(0, 35.0, 0, 35.0),
+        padding: EdgeInsets.fromLTRB(0, 15.0, 0, 35.0),
         color: Colors.grey[200],
         child: Container(
           padding: const EdgeInsets.all(16),
@@ -55,51 +55,78 @@ class _AddNewWordPageState extends State<AddNewWordPage> {
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
+                  fontFamily: 'Kanit-Light'
                 ),
               ),
               SizedBox(height: 16),
-              Text('Word:'),
               TextField(
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+                      decoration: new InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                          borderRadius: BorderRadius.all(
+            Radius.circular(10.0)),
+                        ),
+                        
+                        hintText: 'Enter The Word',
+                      ),
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontFamily: 'Kanit-Light'),
                 onChanged: (text) {
                   setState(() {
                     wordName = text;
                   });
                 },
               ),
-              SizedBox(height: 8),
-              Text('Pronunce:'),
+              SizedBox(height: 15),
+           
               TextField(
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+                      decoration: new InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                          borderRadius: BorderRadius.all(
+            Radius.circular(10.0)),
+                        ),
+                        
+                        hintText: 'Enter the Pronunciation',
+                      ),
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontFamily: 'Kanit-Light'),
                 onChanged: (text) {
                   setState(() {
                     wordPronunce = text;
                   });
                 },
               ),
-              SizedBox(height: 8),
-              Text('Meaning:'),
+              SizedBox(height: 15),
+            
               TextField(
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+                      decoration: new InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                          borderRadius: BorderRadius.all(
+            Radius.circular(10.0)),
+                        ),
+                        
+                        hintText: 'Enter The Meaning',
+                      ),
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontFamily: 'Kanit-Light'),
                 onChanged: (text) {
                   setState(() {
                     wordMeaning = text;
                   });
                 },
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 25),
               ElevatedButton.icon(
                 onPressed: () {
                   if (wordName != '' && wordMeaning != '') {
@@ -113,7 +140,7 @@ class _AddNewWordPageState extends State<AddNewWordPage> {
                 icon: Icon(Icons.save),
                 label: Text('Save'),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.green.shade600,
+                  primary: Colors.lime,
                   padding: EdgeInsets.symmetric(horizontal: 55, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),

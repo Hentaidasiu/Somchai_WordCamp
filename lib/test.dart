@@ -78,14 +78,14 @@ class WordTestPageState extends State<WordTestPage> {
         child: Column(
           children: [
             Container(
-              color: Colors.grey[400],
+              color: Colors.grey[200],
               padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
               child: Row(
                 children: [
                   Expanded(
                     flex: 3,
                     child: Text(
-                      'Q: ${questionI + 1}/$questionTotal',
+                      ' ${questionI + 1}/$questionTotal',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -94,28 +94,34 @@ class WordTestPageState extends State<WordTestPage> {
                   ),
                   Expanded(
                     child: Center(
-                      child: Text(
-                        '+TIME',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                      child: Row(children: [Icon(Icons.more_time) ,Text(
+                          'TIME',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        )],
+                       
                       ),
                     ),
                   ),
                   Expanded(
                     child: Center(
-                      child: Text(
-                        'HINT',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                      child: Row(children: [Icon(Icons.lightbulb) ,Text(
+                          'Hint',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        )],
+                       
                       ),
                     ),
                   ),
                   Expanded(
                     child: Center(
-                      child: Text(
-                        'SKIP',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                      child:  Row(children: [Icon(Icons.skip_next) ,Text(
+                          'SKIP',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        )],
+                       
                       ),
                     ),
                   ),
