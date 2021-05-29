@@ -91,10 +91,11 @@ class DatabaseHelper {
   //User: update xp Data
   Future<Map<String, dynamic>> updateXPUserData(int gainXP) async {
     Database db = await instance.database;
-    int id = 0;
+    int id = 1;
 
     List<Map<String, dynamic>> user = await db.rawQuery('SELECT * FROM user WHERE user_ID = 1');
-    Map<String, dynamic> userData = user[id];
+    Map<String, dynamic> userData = user[id-1];
+    // print(userData);
 
     int newXP = userData['user_exp'].toInt() + gainXP;
     int newLevel = userData['user_level'];
@@ -107,6 +108,7 @@ class DatabaseHelper {
       'user_exp': newXP,
       'user_level': newLevel
     };
+    // print(newUserData);
 
     int returnID = await db.update('user', newUserData, where: 'user_ID = ?', whereArgs: [id]);
 
@@ -117,10 +119,10 @@ class DatabaseHelper {
   //User: update coin Data
   Future<bool> updateCoinUser(int gainCoin) async {
     Database db = await instance.database;
-    int id = 0;
+    int id = 1;
 
     List<Map<String, dynamic>> user = await db.rawQuery('SELECT * FROM user WHERE user_ID = 1');
-    Map<String, dynamic> userData = user[id];
+    Map<String, dynamic> userData = user[id-1];
 
     int newCoin = userData['user_coin'] + gainCoin;
 
@@ -234,7 +236,7 @@ class DatabaseHelper {
 
     int newN = wordRow['wordcard_detail_testedall'].toInt();
     newN = newN + 1;
-    int newAccuary = ((((wordRow['wordcard_detail_testedall'] * wordRow['wordcard_detail_accuary']) + (getscore / fullscore)) / newN) * 100).toInt();
+    int newAccuary = ((((wordRow['wordcard_detail_testedall'] * (wordRow['wordcard_detail_accuary'] / 100)) + (getscore / fullscore)) / newN) * 100).toInt();
     int newHighscore = (wordRow['wordcard_detail_highscore'].toInt() > getscore) ? wordRow['wordcard_detail_highscore'].toInt() : getscore;
 
     Map<String, dynamic> newRow = {
@@ -242,7 +244,7 @@ class DatabaseHelper {
       'wordcard_detail_accuary': newAccuary,
       'wordcard_detail_highscore': newHighscore
     };
-    // print(newRow);
+    print(newRow);
 
     return await db.update('wordcard_detail', newRow, where: 'wordcard_ID = ?', whereArgs: [id]);
   }
@@ -286,8 +288,8 @@ class DatabaseHelper {
 
   //Word: update Data
   Future<int> updateWordData(int id, Map<String, dynamic> row) async {
-    print(id);
-    print(row);
+    // print(id);
+    // print(row);
     Database db = await instance.database;
 
     return await db.update('word', row, where: 'word_ID = ?', whereArgs: [id]);

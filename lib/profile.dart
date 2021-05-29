@@ -4,10 +4,6 @@ import 'package:flutter/material.dart';
 import 'database/database.dart';
 
 class ProfileInfoPage extends StatefulWidget {
-
-
-
-  
   @override
   ProfileInfoPageState createState() => ProfileInfoPageState();
 }
@@ -44,6 +40,13 @@ class ProfileInfoPageState extends State<ProfileInfoPage> {
 
     int i = await dbHelper.updateUserData(1, newUserData);
     print(i);
+  }
+
+  @override
+  void initState() {
+    getUserData();
+
+    super.initState();
   }
 
   @override
@@ -118,7 +121,7 @@ class ProfileInfoPageState extends State<ProfileInfoPage> {
                                 builder: (BuildContext context,
                                     AsyncSnapshot snapshot) {
                                   if (snapshot.hasData) {
-                                    return Text("");
+                                    return Text("$userData");
                                   } else {
                                     return Center(
                                       child: CircularProgressIndicator(),
