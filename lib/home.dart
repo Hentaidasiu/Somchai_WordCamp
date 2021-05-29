@@ -7,6 +7,7 @@ import 'database/database.dart';
 
 //Page
 import 'profile.dart';
+import 'game.dart';
 import 'bottomsheet/wordcardInput.dart';
 import 'bottomsheet/wordcardEdit.dart';
 import 'WordCard.dart';
@@ -238,6 +239,12 @@ class _HomePageState extends State<HomePage> {
                   MaterialPageRoute(
                       builder: (context) => WordCardInputFormPage()),
                 );
+              } else if (index == 3) {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => GameNNPage()),
+                );
               } else if (index == 4) {
                 await Navigator.push(
                   context,
@@ -450,6 +457,9 @@ class _HomePageState extends State<HomePage> {
                                             ['wordcard_ID'],
                                         wordCardName: wordcardInfo[index]
                                             ['wordcard_name'],
+                                            username: username,
+                                            usercoin: usercoin.toString(),
+                                            userlevel: userlevel.toString(),
                                       ),
                                     ),
                                   );
