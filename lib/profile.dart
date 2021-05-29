@@ -71,7 +71,7 @@ class ProfileInfoPageState extends State<ProfileInfoPage> {
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(10.0)),
                                           ),
-                                          hintText: 'Enter your WordCard Name',
+                                          hintText: 'Enter your Name',
                                         ),
                                         style: TextStyle(
                                             fontSize: 14,
