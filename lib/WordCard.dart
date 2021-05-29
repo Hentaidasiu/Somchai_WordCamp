@@ -56,6 +56,7 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
     setState(() {
       username = userData['user_name'];
       usercoin = userData['user_coin'];
+      
       userlevel = userData['user_level'];
     });
   }
@@ -201,7 +202,7 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
       appBar: AppBar(
         title: Text(
           '$wordCardName',
-          style: TextStyle(fontSize: 30, fontFamily: 'Kanit-Light'),
+          style: TextStyle(fontSize: 20, fontFamily: 'Kanit-Light'),
         ),
       ),
       body: Container(
@@ -250,7 +251,7 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
                       //   )
                       // );
                       return Container(
-                        height: 709,
+                        height: 503,
                         child: ListView.builder(
                           itemCount: wordList.length,
                           itemBuilder: (BuildContext context, int index) {

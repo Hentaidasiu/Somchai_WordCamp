@@ -77,7 +77,7 @@ class DatabaseHelper {
 
     List<Map<String, dynamic>> myQueryList =
         await db.rawQuery('SELECT * FROM user WHERE user_ID = 1');
-
+     
     return myQueryList[0];
   }
 
