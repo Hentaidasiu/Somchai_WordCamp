@@ -36,27 +36,13 @@ class ProfileInfoPageState extends State<ProfileInfoPage> {
       userlevel = userData['user_level'];
       levelCap = dbHelper.levelCap(userlevel);
       getXP=userData['user_exp'];
+      levelCurve = getXP/levelCap;
     });
    
   }
 
  
-  //  Future<void> giveReward() async {
-  //   int wcID = await dbHelper.updateWordCardDetail(wordCardID, fullScore, getScore);
-  //   bool coinAdd = await dbHelper.updateCoinUser(getCoin);
-  //   userLevel = await dbHelper.updateXPUserData(getXP);
 
-  //   await getUserData();
-
-  //   setState((){
-  //     exp = userLevel['user_exp'];
-  //     level = userLevel['user_level'];
-  //     levelCap = dbHelper.levelCap(level);
-  //     levelCurve = userLevel['user_exp'] / levelCap;
-  //     nextlevel = level + 1;
-  //     // print(userLevel);
-  //   });
-  // }
 
 
 
@@ -74,13 +60,6 @@ class ProfileInfoPageState extends State<ProfileInfoPage> {
     void setData() async {
     await getUserData();
 
-  }
-  @override
-  void initState() {
-    // getUserData();
-  setData();
-
-    super.initState();
   }
 
   @override
@@ -125,7 +104,7 @@ class ProfileInfoPageState extends State<ProfileInfoPage> {
                   backgroundColor: Colors.green.shade100,
                   valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
                 ),
-                Text('+$getXP XP ($exp/$levelCap)', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold),),
+                Text('+EXP  ($getXP/$levelCap)', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold),),
                                 Row(
                                   children: <Widget>[
                                     Expanded(child: Text("${list[index]}")),
@@ -171,7 +150,7 @@ class ProfileInfoPageState extends State<ProfileInfoPage> {
                                 builder: (BuildContext context,
                                     AsyncSnapshot snapshot) {
                                   if (snapshot.hasData) {
-                                    return Text("$userData");
+                                    return Text("");
                                   } else {
                                     return Center(
                                       child: CircularProgressIndicator(),

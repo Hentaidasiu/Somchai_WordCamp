@@ -116,20 +116,21 @@ class ResultPageState extends State<ResultPage> {
                       style: TextStyle(fontSize: 24),
                     )),
                 progressBar(),
-                Container(
-                  padding: EdgeInsets.fromLTRB(0, 40, 0, 20),
-                  child: Text(
-                    'You have earn $getCoin coins!',
-                    style: TextStyle(fontSize: 24),
-                  ),
+                Center(
+                  child: Row(children: [     Container( 
+                      child: Image.asset(
+                    'assets/coin-icon.png',
+                    scale: 7,
+                  )),Container(
+                    padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                    child: Text(
+                      'Congrat You have earn $getCoin coins!',
+                      style: TextStyle(fontSize: 24),
+                    ),
+                  ),]),
                 ),
                 Container(
-                    child: Image.asset(
-                  'assets/coin-icon.png',
-                  scale: 7,
-                )),
-                Container(
-                  padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
+                  padding: EdgeInsets.fromLTRB(0, 1, 0, 0),
                   child: IconButton(
                     iconSize: 50,
                     icon: Icon(Icons.arrow_back_outlined),
