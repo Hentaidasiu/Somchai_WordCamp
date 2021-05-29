@@ -226,8 +226,8 @@ class WordTestPageState extends State<WordTestPage> {
             child: LinearProgressIndicator(
               value: timeCurve,
               minHeight: 10,
-              backgroundColor: Colors.white,
-              valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
+              backgroundColor: Colors.green,
+              valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
             ),
           ),
           Container(

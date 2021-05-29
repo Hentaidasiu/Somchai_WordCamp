@@ -38,6 +38,13 @@ dependencies:
   focused_menu: ^1.0.5
   auto_size_text: ^2.1.0
 
+  carousel_slider: ^3.0.0
+  flutter_fortune_wheel: ^1.0.0
+  maze: ^3.0.0
+  flutter_spinning_wheel: ^1.1.0
+
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

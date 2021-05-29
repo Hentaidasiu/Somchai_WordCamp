@@ -87,7 +87,7 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
               Icon(Icons.money),
               Container(
                 margin: const EdgeInsets.only(left: 2),
-                child: Text(usercoin.toString()),
+                child: Text("${usercoin.toString()}"),
               ),
             ]),
           )),
@@ -191,7 +191,7 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
   void initState() {
     getWordCardData();
     // getWordList();
-
+    getUserData();
     super.initState();
   }
 

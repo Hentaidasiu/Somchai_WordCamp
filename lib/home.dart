@@ -11,6 +11,7 @@ import 'bottomsheet/wordcardInput.dart';
 import 'bottomsheet/wordcardEdit.dart';
 import 'WordCard.dart';
 
+
 class HomePage extends StatefulWidget {
   //Value
   final Map<String, dynamic> userData;
@@ -243,6 +244,7 @@ class _HomePageState extends State<HomePage> {
                   MaterialPageRoute(builder: (context) => ProfileInfoPage()),
                 );
               }
+        
               await setData();
             }),
       ),

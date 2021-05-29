@@ -35,6 +35,8 @@ class ProfileInfoPageState extends State<ProfileInfoPage> {
       usercoin = userData['user_coin'];
       userlevel = userData['user_level'];
       levelCap = dbHelper.levelCap(userlevel);
+      print(userlevel);
+      print(levelCap);
       getXP=userData['user_exp'];
       levelCurve = getXP/levelCap;
     });

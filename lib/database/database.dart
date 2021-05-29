@@ -154,6 +154,9 @@ class DatabaseHelper {
 
   //Get XP Range
   int levelCap(int level) {
+    if(level-2 < 1){
+      level = 3;
+    }
     int power = pow(2, level-2).toInt();
     return 100 * power;
   }
