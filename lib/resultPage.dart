@@ -61,6 +61,8 @@ class ResultPageState extends State<ResultPage> {
     userLevel = await dbHelper.updateXPUserData(getXP);
 
     await getUserData();
+    print('User');
+    print(userData);
 
     setState((){
       exp = userLevel['user_exp'];
