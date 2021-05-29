@@ -2,42 +2,105 @@ import 'package:flutter/material.dart';
 import 'package:somchai_wordcamp/bottomsheet/AddNewWord.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:focused_menu/focused_menu.dart';
-
+import 'package:popup_menu/popup_menu.dart';
 //Page
 import 'test.dart';
 import 'bottomsheet/testOption.dart';
-
+import 'bottomsheet/editword.dart';
 //Database
 import 'database/database.dart';
 
 class WordCardDetailPage extends StatefulWidget {
   final int wordCardID;
+  final String wordCardName;
 
-  WordCardDetailPage({Key key, this.wordCardID}) : super(key: key);
+  WordCardDetailPage({Key key, this.wordCardID, this.wordCardName})
+      : super(key: key);
 
   @override
-  WordCardDetailPageState createState() => WordCardDetailPageState(wordCardID);
+  WordCardDetailPageState createState() =>
+      WordCardDetailPageState(wordCardID, wordCardName);
 }
 
 class WordCardDetailPageState extends State<WordCardDetailPage> {
   //Constructer
-  WordCardDetailPageState(this.wordCardID);
+  WordCardDetailPageState(this.wordCardID, this.wordCardName){
+    bottomNavSet();
+  }
 
   //Database
   final dbHelper = DatabaseHelper.instance;
 
   //Value
+  Map<String, dynamic> userData = {};
   Map<String, dynamic> wordcardInfo = {};
   List<Map<String, dynamic>> wordList = [];
   int wordCardID;
-  String wordCardName = 'Name';
-
+  String username = 'Username';
+  String wordCardName;
+  int MenuSelect;
+  int usercoin = 0;
+  int userlevel = 0;
   //Function
   Future<void> getWordCardData() async {
     wordcardInfo = await dbHelper.queryOneWordCardData(wordCardID);
 
     wordCardName = wordcardInfo['wordcard_name'];
   }
+
+  Future<void> getUserData() async {
+    userData = await dbHelper.queryUserData();
+
+    setState(() {
+      username = userData['user_name'];
+      usercoin = userData['user_coin'];
+      userlevel = userData['user_level'];
+    });
+  }
+
+    List<BottomNavigationBarItem> bottomNavBarItems;
+
+  bottomNavSet() {
+    bottomNavBarItems = [
+         BottomNavigationBarItem(
+          title: Container(
+            padding: const EdgeInsets.only(left: 4),
+            child: Row(children: [
+              Text('LV${userlevel.toString()} ',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,fontFamily: 'Kanit-Light')),
+         
+              Text(username.toUpperCase(),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,fontFamily: 'Kanit-Light')),
+            ]),
+          ),
+          icon: Container(
+            padding: const EdgeInsets.only(left: 2),
+            child: Row(children: [
+              Icon(Icons.money),
+              Container(
+                margin: const EdgeInsets.only(left: 2),
+                child: Text(usercoin.toString()),
+              ),
+            ]),
+          )),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.add, color: Colors.white),
+          title: Text("ADD", style: TextStyle(color: Colors.white,fontFamily: 'Kanit-Light'))),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.add),
+          title: Text("ADD",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,fontFamily: 'Kanit-Light'))),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.message),
+          title: Text("GAME",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,fontFamily: 'Kanit-Light'))),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          title: Text("PROFILE",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,fontFamily: 'Kanit-Light'))),
+    ];
+  }
+
 
   Future<bool> getWordList() async {
     wordList = await dbHelper.queryWordList(wordCardID);
@@ -52,6 +115,56 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
     return true;
   }
 
+  void showPopup(Offset offset, context) {
+    PopupMenu menu = PopupMenu(
+        // backgroundColor: Colors.teal,
+        // lineColor: Colors.tealAccent,
+        maxColumn: 3,
+        items: [
+          MenuItem(title: 'Edit', image: Icon(Icons.mail, color: Colors.white)),
+          MenuItem(
+              title: 'Delete',
+              image: Icon(Icons.book_online_rounded, color: Colors.white)),
+          MenuItem(
+              title: 'Power',
+              image: Icon(
+                Icons.power,
+                color: Colors.white,
+              )),
+        ],
+        onClickMenu: onClickMenu,
+        stateChanged: stateChanged,
+        onDismiss: onDismiss);
+    menu.show(rect: Rect.fromPoints(offset, offset));
+  }
+
+  void stateChanged(bool isShow) {
+    print('menu is ${isShow ? 'showing' : 'closed'}');
+  }
+
+  void onClickMenu(MenuItemProvider item) {
+    print('Click menu -> ${item.menuTitle}');
+    if (item.menuTitle == "Edit") {
+      var deleteID = wordList[MenuSelect]["word_ID"];
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                EditWordPage(wordCardID: wordCardID, deleteID: deleteID)),
+      );
+    } else if (item.menuTitle == "Delete") {
+      var deleteID = wordList[MenuSelect]["word_ID"];
+      List<Map<String, dynamic>>.from(wordList).removeAt(MenuSelect);
+      MenuSelect = 0;
+      var blank = dbHelper.deleteWordData(deleteID, wordCardID);
+    }
+  }
+
+  void onDismiss() {
+    print('Menu is dismiss');
+  }
+
+
   @override
   void initState() {
     getWordCardData();
@@ -62,11 +175,12 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    PopupMenu.context = context;
     return Scaffold(
       appBar: AppBar(
         title: Text(
           '$wordCardName',
-          style: TextStyle(fontSize: 30),
+          style: TextStyle(fontSize: 30,fontFamily: 'Kanit-Light'),
         ),
       ),
       body: Container(
@@ -81,14 +195,14 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
                   //padding: EdgeInsets.fromLTRB(left, top, right, bottom),
                   child: Text(
                     "  Words",
-                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold,fontFamily: 'Kanit-Light'),
                   ),
                 ),
                 Spacer(),
                 Container(
                   child: Text(
                     "Meaning ",
-                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold,fontFamily: 'Kanit-Light'),
                   ),
                 ),
               ],
@@ -97,26 +211,6 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
               width: double.infinity,
               color: Colors.grey[50],
               child: Column(children: [
-                // FutureBuilder(
-                //   future: getWordList(),
-                //   builder: (BuildContext context, AsyncSnapshot snapshot) {
-                //     if (snapshot.hasData) {
-                //       return Center(
-                //         child: Text('$wordList'),
-                //       );
-                //       // return ListView.builder(
-                //       //   itemCount: wordList.length,
-                //       //   itemBuilder: (BuildContext context, int index) {
-                //       //     return here;
-                //       //   },
-                //       // );
-                //     } else {
-                //       return Center(
-                //         child: Text('No Word Found'),
-                //       );
-                //     }
-                //   },
-                // ),
                 FutureBuilder(
                   future: getWordList(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -132,67 +226,51 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
                         child: ListView.builder(
                           itemCount: wordList.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return Column(
-                              children: [
-                                ListTile(
-                                  title:
-                                      Text('${wordList[index]['word_word']}'),
-                                  subtitle: Text(
-                                      '(${wordList[index]['word_pronunce']})'),
-                                  trailing: Text(
-                                      '${wordList[index]['word_meaning']}'),
-                                  onLongPress: () {
-                                    return showMenu(
-                                        context: context,
-                                        position:
-                                            RelativeRect.fromLTRB(0, 349, 0, 0),
-                                        items: [
-                                          PopupMenuItem<int>(
-                                            value: 0,
-                                            child: GestureDetector(
-                                              child: ListTile(
-                                                leading: Text(
-                                                  "Edit",
-                                                  style:
-                                                      TextStyle(fontSize: 30),
-                                                ),
-                                              ),
-                                              onTap: () {
-                                                print(
-                                                    'ID : ${wordList[index]['word_ID']}');
-                                              },
-                                            ),
-                                          ),
-                                          PopupMenuItem<int>(
-                                            value: 0,
-                                            child: GestureDetector(
-                                              child: ListTile(
-                                                leading: Text(
-                                                  "Delete",
-                                                  style:
-                                                      TextStyle(fontSize: 30),
-                                                ),
-                                              ),
-                                              onTap: () {
-                                                print(
-                                                    'ID : ${wordList[index]['word_ID']}');
-                                              },
-                                            ),
-                                          ),
-                                        ]);
-                                  },
-                                ),
-                                Divider(
-                                  thickness: 3,
-                                )
-                              ],
-                            );
+                            return MaterialButton(
+                                child: GestureDetector(
+                              onLongPressEnd: (LongPressEndDetails details) {
+                                MenuSelect = index;
+                                showPopup(details.globalPosition, context);
+                              },
+                              child: Column(
+                                children: [
+                                  ListTile(
+                                    title:
+                                        Text('${wordList[index]['word_word']}', style: TextStyle( fontWeight: FontWeight.bold,fontFamily: 'Kanit-Light',fontSize: 20)),
+                                    subtitle: Text(
+                                        '(${wordList[index]['word_pronunce']})', style: TextStyle( fontWeight: FontWeight.bold,fontFamily: 'Kanit-Light')),
+                                    trailing: Text(
+                                        '${wordList[index]['word_meaning']}', style: TextStyle( fontWeight: FontWeight.bold,fontFamily: 'Kanit-Light',fontSize: 20)),
+                                  ),
+                                  Divider(
+                                    thickness: 3,
+                                  )
+                                ],
+                              ),
+                            ));
+
+                            // return Column(
+                            //   children: [
+                            //     ListTile(
+                            //       title:
+                            //           Text('${wordList[index]['word_word']}'),
+                            //       subtitle: Text(
+                            //           '(${wordList[index]['word_pronunce']})'),
+                            //       trailing: Text(
+                            //           '${wordList[index]['word_meaning']}'),
+
+                            //     ),
+                            //     Divider(
+                            //       thickness: 3,
+                            //     )
+                            //   ],
+                            // );
                           },
                         ),
                       );
                     } else {
                       return Center(
-                        child: Text('No Word Found'),
+                        child: Text('No Word Found', style: TextStyle( fontWeight: FontWeight.bold,fontFamily: 'Kanit-Light')),
                       );
                     }
                   },
@@ -202,29 +280,17 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        unselectedItemColor: Colors.grey[600],
-        selectedItemColor: Colors.red[300],
-        backgroundColor: Colors.grey[400],
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.card_membership_rounded),
-            label: 'Card',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.remove_red_eye_outlined),
-            label: 'View statistic',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.playlist_play_rounded),
-            label: 'Test',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_box_outlined),
-            label: 'Add word',
-          ),
-        ],
-        onTap: (int index) async {
+      bottomNavigationBar: Theme(
+        data: ThemeData(
+          primarySwatch: Palette.kToDark,
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+        ),
+        child: BottomNavigationBar(
+          items: bottomNavBarItems,
+          unselectedItemColor: Colors.lime[900],
+          type: BottomNavigationBarType.fixed,
+          onTap: (int index) async {
           if (index == 0) {
             // await Navigator.push(
             //   context,
@@ -235,12 +301,12 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
             //   context,
             //   MaterialPageRoute(builder: (context) => ProfileInfoPage()),
             // );
-          } else if (index == 2) {
+          } else if (index == 3) {
             // await Navigator.push(
             //   context,
             //   MaterialPageRoute(builder: (context) => WordTestPage(wordCardID: wordCardID, wordList: wordList, randomQuestion: true)),
             // );
-            if (wordList.length < 5) {
+            if (wordList.length < 3) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text('Require at least 5 word to use Test feature.'),
               ));
@@ -252,7 +318,7 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
                     TestOptionPage(wordCardID: wordCardID, wordList: wordList),
               );
             }
-          } else if (index == 3) {
+          } else if (index == 2) {
             // await Navigator.push(
             //   context,
             //   MaterialPageRoute(builder: (context) => AddNewWordPage()),
@@ -267,7 +333,41 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
             getWordList();
           });
         },
+        ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {  showCupertinoModalBottomSheet(
+              duration: Duration(milliseconds: 250), //popup speed
+              context: context,
+              builder: (context) => AddNewWordPage(wordCardID: wordCardID),
+            );},
+        child: Icon(
+          Icons.add,
+          size: 36,
+        ),
+        backgroundColor: Colors.yellow,
+        foregroundColor: Colors.black,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
+
+}
+
+class Palette {
+  static const MaterialColor kToDark = const MaterialColor(
+    0xff827715, // 0% comes in here, this will be color picked if no shade is selected when defining a Color property which doesn’t require a swatch.
+    const <int, Color>{
+      50: const Color(0xff827715), //10%
+      100: const Color(0xff827715), //20%
+      200: const Color(0xff827715), //30%
+      300: const Color(0xff827715), //40%
+      400: const Color(0xff827715), //50%
+      500: const Color(0xff00FF00), //60%
+      600: const Color(0xff00FF00), //70%
+      700: const Color(0xff808080), //80%
+      800: const Color(0xff808080), //90%
+      900: const Color(0xff808080), //100%
+    },
+  );
 }

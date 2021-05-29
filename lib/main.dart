@@ -9,12 +9,14 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Somchai_WordCamp',
       theme: ThemeData(
-        primarySwatch: Colors.purple,
+        primarySwatch:  Colors.lime,
+        fontFamily: 'Kanit-Light'
       ),
       home: MyHomePage(title: 'Somchai words camp'),
     );

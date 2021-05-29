@@ -283,6 +283,8 @@ class DatabaseHelper {
 
   //Word: update Data
   Future<int> updateWordData(int id, Map<String, dynamic> row) async {
+    print(id);
+    print(row);
     Database db = await instance.database;
 
     return await db.update('word', row, where: 'word_ID = ?', whereArgs: [id]);

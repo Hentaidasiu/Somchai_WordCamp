@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:popup_menu/popup_menu.dart';
@@ -26,17 +24,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   //Database
   final dbHelper = DatabaseHelper.instance;
-  
+
   //Value
   Map<String, dynamic> userData = {};
   List<String> cateName = ["All", "FAV1", "FAV2", "FAV3", "FAV4", "FAV5"];
-  int MenuSelect ;
+  int MenuSelect;
   List<Map<String, dynamic>> wordcardInfo = [];
   int categorySelect = 0;
   String categoryText = 'All';
   String username = 'Username';
   int usercoin = 0;
   int userlevel = 0;
+  int selectedCard = -1;
 
   //Function
   Future<void> getUserData() async {
@@ -100,9 +99,9 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.only(left: 4),
             child: Row(children: [
               Text('LV${userlevel.toString()} ',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               Text(username.toUpperCase(),
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
             ]),
           ),
           icon: Container(
@@ -118,26 +117,35 @@ class _HomePageState extends State<HomePage> {
       BottomNavigationBarItem(
           icon: Icon(Icons.add, color: Colors.white),
           title: Text("ADD", style: TextStyle(color: Colors.white))),
-      BottomNavigationBarItem(icon: Icon(Icons.add), title: Text("ADD")),
-      BottomNavigationBarItem(icon: Icon(Icons.message), title: Text("GAME")),
-      BottomNavigationBarItem(icon: Icon(Icons.person), title: Text("PROFILE")),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.add),
+          title: Text("ADD",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16))),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.message),
+          title: Text("GAME",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16))),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          title: Text("PROFILE",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16))),
     ];
   }
 
-  void showPopup(Offset offset ,context ) {
+  void showPopup(Offset offset, context) {
     PopupMenu menu = PopupMenu(
         // backgroundColor: Colors.teal,
         // lineColor: Colors.tealAccent,
-        maxColumn: 3,
+        maxColumn: 2,
         items: [
-          MenuItem(title: 'Edit', image: Icon(Icons.mail, color: Colors.white)),
-          MenuItem(title: 'Delete', image: Icon(Icons.book_online_rounded, color: Colors.white)),
           MenuItem(
-              title: 'Power',
-              image: Icon(
-                Icons.power,
-                color: Colors.white,
-              )),
+              title: 'Edit',
+              textStyle: TextStyle(fontSize: 12.0, color: Colors.lime),
+              image: Icon(Icons.edit, color: Colors.lime)),
+          MenuItem(
+              title: 'Delete',
+              textStyle: TextStyle(fontSize: 12.0, color: Colors.lime),
+              image: Icon(Icons.delete, color: Colors.lime)),
         ],
         onClickMenu: onClickMenu,
         stateChanged: stateChanged,
@@ -147,21 +155,23 @@ class _HomePageState extends State<HomePage> {
 
   void stateChanged(bool isShow) {
     print('menu is ${isShow ? 'showing' : 'closed'}');
- 
   }
 
   void onClickMenu(MenuItemProvider item) {
     print('Click menu -> ${item.menuTitle}');
-      if(item.menuTitle == "Edit"){
+    if (item.menuTitle == "Edit") {
       var deleteID = wordcardInfo[MenuSelect]["wordcard_ID"];
-      Navigator.push(context,MaterialPageRoute(builder: (context) => WordCardEditFormPage(deleteID : deleteID)),);
-      }
-      else if (item.menuTitle == "Delete"){
-        var deleteID = wordcardInfo[MenuSelect]["wordcard_ID"];
-        List<Map<String, dynamic>>.from(wordcardInfo).removeAt(MenuSelect);
-        MenuSelect = 0;
-        var blank = dbHelper.deleteWordCardData(deleteID);
-      }
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => WordCardEditFormPage(deleteID: deleteID)),
+      );
+    } else if (item.menuTitle == "Delete") {
+      var deleteID = wordcardInfo[MenuSelect]["wordcard_ID"];
+      List<Map<String, dynamic>>.from(wordcardInfo).removeAt(MenuSelect);
+      MenuSelect = 0;
+      var blank = dbHelper.deleteWordCardData(deleteID);
+    }
   }
 
   void onDismiss() {
@@ -189,7 +199,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Somchai WordCard")),
+        title: Center(child: Text("Somchai WordCard"  ,style : TextStyle(fontFamily: 'Kanit-Light'))),
         automaticallyImplyLeading: false,
         // actions: <Widget>[
         //   GestureDetector(
@@ -204,11 +214,13 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: Theme(
         data: ThemeData(
+          primarySwatch: Palette.kToDark,
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
         ),
         child: BottomNavigationBar(
             items: bottomNavBarItems,
+            unselectedItemColor: Colors.lime[900],
             type: BottomNavigationBarType.fixed,
             onTap: (int index) async {
               if (index == 2) {
@@ -237,7 +249,7 @@ class _HomePageState extends State<HomePage> {
           Icons.add,
           size: 36,
         ),
-        backgroundColor: Colors.yellow,
+        backgroundColor: Colors.lime,
         foregroundColor: Colors.black,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -250,7 +262,7 @@ class _HomePageState extends State<HomePage> {
           flex: -1,
           child: GridView.count(
             primary: false,
-            padding: const EdgeInsets.all(4),
+            padding: const EdgeInsets.all(2),
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
             shrinkWrap: true,
@@ -260,139 +272,143 @@ class _HomePageState extends State<HomePage> {
                 onTap: () {
                   setState(() {
                     categorySelect = 0;
+                    selectedCard = 0;
                   });
                 },
                 child: Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(5),
                   child: Column(children: [
-                    Icon(
-                      Icons.supervised_user_circle,
-                      size: 20,
-                    ),
+                    Icon(Icons.supervised_user_circle, size: 24),
                     Text(
                       "${cateName[0].toUpperCase()}",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Kanit-Light'),
+                
                     )
                   ]),
-                  color: Colors.teal[100],
+                  color: selectedCard == 0 ? Colors.lime : Colors.white,
                 ),
               ),
               GestureDetector(
                 onTap: () {
                   setState(() {
                     categorySelect = 1;
+                    selectedCard = 1;
                   });
                 },
                 child: Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(5),
                   child: Column(children: [
-                    Icon(Icons.star_rate_rounded,
-                        color: Color(0xFFFF3377), size: 24),
+                    Icon(Icons.star_rate_rounded, size: 24),
                     Text(
                       "${cateName[1].toUpperCase()}",
                       style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                          color: Color(0xFFFF3377)),
+                        fontWeight: FontWeight.bold,fontFamily: 'Kanit-Light'
+                      ),
                     )
                   ]),
-                  color: Colors.teal[100],
+                  color: selectedCard == 1 ? Colors.lime : Colors.white,
                 ),
               ),
               GestureDetector(
                 onTap: () {
                   setState(() {
                     categorySelect = 2;
+                    selectedCard = 2;
                   });
                 },
                 child: Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(5),
                   child: Column(children: [
                     Icon(
-                      Icons.supervised_user_circle,
-                      size: 20,
+                      Icons.star_rate_rounded,
+                      size: 24,
                     ),
                     Text("${cateName[2].toUpperCase()}",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Kanit-Light'),
                         overflow: TextOverflow.fade,
                         maxLines: 3,
                         softWrap: false)
                   ]),
-                  color: Colors.teal[100],
+                  color: selectedCard == 2 ? Colors.lime : Colors.white,
                 ),
               ),
               GestureDetector(
                 onTap: () {
                   setState(() {
                     categorySelect = 3;
+                    selectedCard = 3;
                   });
                 },
                 child: Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(5),
                   child: Column(children: [
                     Icon(
-                      Icons.supervised_user_circle,
-                      size: 20,
+                      Icons.star_rate_rounded,
+                      size: 24,
                     ),
                     Text("${cateName[3].toUpperCase()}",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Kanit-Light'),
                         overflow: TextOverflow.fade,
                         maxLines: 3,
                         softWrap: false)
                   ]),
-                  color: Colors.teal[100],
+                  color: selectedCard == 3 ? Colors.lime : Colors.white,
                 ),
               ),
               GestureDetector(
                 onTap: () {
                   setState(() {
                     categorySelect = 4;
+                    selectedCard = 4;
                   });
                 },
                 child: Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(5),
                   child: Column(children: [
                     Icon(
-                      Icons.supervised_user_circle,
-                      size: 20,
+                      Icons.star_rate_rounded,
+                      size: 24,
                     ),
                     Text("${cateName[4].toUpperCase()}",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Kanit-Light'),
                         overflow: TextOverflow.fade,
                         maxLines: 3,
                         softWrap: false)
                   ]),
-                  color: Colors.teal[100],
+                  color: selectedCard == 4 ? Colors.lime : Colors.white,
                 ),
               ),
               GestureDetector(
                 onTap: () {
                   setState(() {
                     categorySelect = 5;
+                    selectedCard = 5;
                   });
                 },
                 child: Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(5),
                   child: Column(children: [
                     Icon(
-                      Icons.supervised_user_circle,
-                      size: 20,
+                      Icons.star_rate_rounded,
+                      size: 24,
                     ),
                     Text("${cateName[5].toUpperCase()}",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Kanit-Light'),
                         overflow: TextOverflow.fade,
                         maxLines: 3,
                         softWrap: false)
                   ]),
-                  color: Colors.teal[100],
+                  color: selectedCard == 5 ? Colors.lime : Colors.white,
                 ),
               ),
             ],
           )),
       Container(
-          padding: EdgeInsets.only(top: 12),
-          child: Text('CATEGORY: ${categoryText.toUpperCase()}',
-              style: TextStyle(fontSize: 14))),
+        padding: EdgeInsets.only(top: 12),
+        // child: Text('CATEGORY: ${categoryText.toUpperCase()}',
+
+        //     style: TextStyle(fontSize: 14))
+      ),
       Expanded(
         flex: 8,
         child: FutureBuilder(
@@ -404,46 +420,58 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (BuildContext context, int index) {
                   return MaterialButton(
                       child: GestureDetector(
-                    onLongPressEnd: (LongPressEndDetails details) {
-                      MenuSelect = index;
-                      showPopup(details.globalPosition,context );
-                    },
-                    child: ListTile(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => WordCardDetailPage(
-                            wordCardID: wordcardInfo[index]['wordcard_ID'],
-                          ),
-                        ),
-                      );
-                    },
-                    
-                    leading: Icon(Icons.book_rounded, size: 36),
-                    title: Text(
-                      wordcardInfo[index]['wordcard_name'].toUpperCase(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    subtitle: Text(
-                      wordcardInfo[index]['wordcard_topic'].toUpperCase(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.purple.shade800,
-                      ),
-                    ),
-                    trailing: Text(
-                      '${wordcardInfo[index]['wordcard_word'].toString()} WORD',
-                    ),
-                  )
-                  ));
+                          onLongPressEnd: (LongPressEndDetails details) {
+                            MenuSelect = index;
+                            showPopup(details.globalPosition, context);
+                          },
+                          child: Column(
+                            children: [
+                              ListTile(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => WordCardDetailPage(
+                                        wordCardID: wordcardInfo[index]
+                                            ['wordcard_ID'],
+                                        wordCardName: wordcardInfo[index]
+                                            ['wordcard_name'],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                leading: Icon(Icons.book_rounded, size: 36),
+                                title: Text(
+                                  wordcardInfo[index]['wordcard_name']
+                                      .toUpperCase(),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Kanit-Light'
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  wordcardInfo[index]['wordcard_topic']
+                                      .toUpperCase(),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.lime[800],
+                                    fontFamily: 'Kanit-Light'
+                                  ),
+                                ),
+                                trailing: Text(
+                                  '${wordcardInfo[index]['wordcard_word'].toString()} WORD', style: TextStyle(fontFamily: 'Kanit-Light'),
+                                ),
+                              ),
+                              Divider(
+                                thickness: 3,
+                              )
+                            ],
+                          )));
                 },
               );
             } else {
               return Center(
-                child: Text('No WordCard Created'),
+                child: Text('No WordCard Created ', style: TextStyle(fontFamily: 'Kanit-Light')),
               );
             }
           },
@@ -451,55 +479,22 @@ class _HomePageState extends State<HomePage> {
       ),
     ]);
   }
-
-  Widget bottom(BuildContext context) {
-    return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home\ndasdsa',
-          backgroundColor: Colors.red,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.add_circle_outline),
-          label: 'Business',
-          backgroundColor: Colors.green,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person_rounded),
-          label: 'Profile',
-          backgroundColor: Colors.purple,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.settings),
-          label: 'Settings',
-          backgroundColor: Colors.pink,
-        ),
-      ],
-      selectedItemColor: Colors.amber[800],
-      onTap: (int index) async {
-        if (index == 3) {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => WordCardInputFormPage()),
-          );
-        } else if (index == 4) {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ProfileInfoPage()),
-          );
-        }
-        getWordCardData(categorySelect);
-      },
-    );
-  }
-
-  List<String> userInfo = [
-    "Username5",
-    "50",
-    "250",
-  ];
 }
 
-
-
+class Palette {
+  static const MaterialColor kToDark = const MaterialColor(
+    0xff827715, // 0% comes in here, this will be color picked if no shade is selected when defining a Color property which doesn’t require a swatch.
+    const <int, Color>{
+      50: const Color(0xff827715), //10%
+      100: const Color(0xff827715), //20%
+      200: const Color(0xff827715), //30%
+      300: const Color(0xff827715), //40%
+      400: const Color(0xff827715), //50%
+      500: const Color(0xff00FF00), //60%
+      600: const Color(0xff00FF00), //70%
+      700: const Color(0xff808080), //80%
+      800: const Color(0xff808080), //90%
+      900: const Color(0xff808080), //100%
+    },
+  );
+}
