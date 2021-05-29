@@ -13,19 +13,19 @@ import 'database/database.dart';
 
 class WordCardDetailPage extends StatefulWidget {
   final int wordCardID;
-  final String wordCardName;
+  final String wordCardName, username, usercoin, userlevel;
 
-  WordCardDetailPage({Key key, this.wordCardID, this.wordCardName})
+  WordCardDetailPage({Key key, this.wordCardID, this.wordCardName, this.username, this.usercoin, this.userlevel})
       : super(key: key);
 
   @override
   WordCardDetailPageState createState() =>
-      WordCardDetailPageState(wordCardID, wordCardName);
+      WordCardDetailPageState(wordCardID, wordCardName, username, usercoin, userlevel);
 }
 
 class WordCardDetailPageState extends State<WordCardDetailPage> {
   //Constructer
-  WordCardDetailPageState(this.wordCardID, this.wordCardName) {
+  WordCardDetailPageState(this.wordCardID, this.wordCardName, this.username, this.usercoin, this.userlevel) {
     bottomNavSet();
   }
 
@@ -37,11 +37,9 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
   Map<String, dynamic> wordcardInfo = {};
   List<Map<String, dynamic>> wordList = [];
   int wordCardID;
-  String username = 'Username';
+  String username, usercoin, userlevel;
   String wordCardName;
   int MenuSelect;
-  int usercoin = 0;
-  int userlevel = 0;
   int showIndex = 0;
   //Function
   Future<void> getWordCardData() async {
@@ -50,16 +48,16 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
     wordCardName = wordcardInfo['wordcard_name'];
   }
 
-  Future<void> getUserData() async {
-    userData = await dbHelper.queryUserData();
+  // Future<void> getUserData() async {
+  //   userData = await dbHelper.queryUserData();
 
-    setState(() {
-      username = userData['user_name'];
-      usercoin = userData['user_coin'];
+  //   setState(() {
+  //     username = userData['user_name'];
+  //     usercoin = userData['user_coin'];
       
-      userlevel = userData['user_level'];
-    });
-  }
+  //     userlevel = userData['user_level'];
+  //   });
+  // }
 
   List<BottomNavigationBarItem> bottomNavBarItems;
 
@@ -69,7 +67,7 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
           title: Container(
             padding: const EdgeInsets.only(left: 4),
             child: Row(children: [
-              Text('LV${userlevel.toString()} ',
+              Text('LV$userlevel ',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -123,9 +121,9 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
   Future<bool> getWordList() async {
     wordList = await dbHelper.queryWordList(wordCardID);
 
-    setState(() {
-      wordList = wordList;
-    });
+    // setState(() {
+    //   wordList = wordList;
+    // });
     return true;
   }
 
