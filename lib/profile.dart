@@ -18,21 +18,51 @@ class ProfileInfoPageState extends State<ProfileInfoPage> {
 
   //Value
   Map<String, dynamic> userData;
+    int percent, level, nextlevel, levelCap, exp;
   String user_name_update = '';
   List list = ["UserName"];
-  String username = 'Username';
+  String username;
   int usercoin = 0;
   int userlevel = 0;
+  double levelCurve;
+  int getXP;
+
   //Function
+   
+
+
   Future<void> getUserData() async {
     userData = await dbHelper.queryUserData();
-
+    print(userData);
     setState(() {
       username = userData['user_name'];
       usercoin = userData['user_coin'];
       userlevel = userData['user_level'];
+      levelCap = dbHelper.levelCap(userlevel);
+      getXP=userData['user_exp'];
     });
+   
   }
+
+ 
+  //  Future<void> giveReward() async {
+  //   int wcID = await dbHelper.updateWordCardDetail(wordCardID, fullScore, getScore);
+  //   bool coinAdd = await dbHelper.updateCoinUser(getCoin);
+  //   userLevel = await dbHelper.updateXPUserData(getXP);
+
+  //   await getUserData();
+
+  //   setState((){
+  //     exp = userLevel['user_exp'];
+  //     level = userLevel['user_level'];
+  //     levelCap = dbHelper.levelCap(level);
+  //     levelCurve = userLevel['user_exp'] / levelCap;
+  //     nextlevel = level + 1;
+  //     // print(userLevel);
+  //   });
+  // }
+
+
 
   Future<bool> readUserData() async {
     userData = await dbHelper.queryUserData();
@@ -45,6 +75,17 @@ class ProfileInfoPageState extends State<ProfileInfoPage> {
     int i = await dbHelper.updateUserData(1, newUserData);
     print(i);
   }
+    void setData() async {
+    await getUserData();
+
+  }
+  @override
+  void initState() {
+    // getUserData();
+  setData();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +94,7 @@ class ProfileInfoPageState extends State<ProfileInfoPage> {
           title: Text('Profile'),
         ),
         body: Column(children: [
+          
           Expanded(
             flex: 2,
             child: ListView.builder(
@@ -74,12 +116,20 @@ class ProfileInfoPageState extends State<ProfileInfoPage> {
                                   ),
                                   borderRadius: BorderRadius.circular(500),
                                 ),
+                                  LinearProgressIndicator(
+                  value: levelCurve,
+                  minHeight: 10,
+                  backgroundColor: Colors.green.shade100,
+                  valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
+                ),
+                Text('+$getXP XP ($exp/$levelCap)', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold),),
                                 Row(
                                   children: <Widget>[
                                     Expanded(child: Text("${list[index]}")),
                                     Expanded(
                                       flex: 2,
                                       child: TextField(
+                                     
                                         decoration: new InputDecoration(
                                           enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
@@ -87,7 +137,7 @@ class ProfileInfoPageState extends State<ProfileInfoPage> {
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(10.0)),
                                           ),
-                                          hintText: 'Enter your Name',
+                                          hintText: '$username',
                                         ),
                                         style: TextStyle(
                                             fontSize: 14,
@@ -107,9 +157,9 @@ class ProfileInfoPageState extends State<ProfileInfoPage> {
                             title: Row(
                           children: [
                             Expanded(flex: 0, child: Text("LV")),
-                            Expanded(flex: 3, child: Text("500")),
+                            Expanded(flex: 3, child: Text("$userlevel")),
                             Expanded(flex: 0, child: Icon(Icons.money)),
-                            Expanded(flex: 1, child: Text("77")),
+                            Expanded(flex: 1, child: Text("$usercoin")),
                           ],
                         )),
                         Center(
@@ -157,6 +207,8 @@ class ProfileInfoPageState extends State<ProfileInfoPage> {
                   ));
                 }),
           )
-        ]));
+        ])
+       
+        );
   }
 }

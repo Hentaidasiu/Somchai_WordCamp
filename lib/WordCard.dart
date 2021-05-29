@@ -56,6 +56,7 @@ class WordCardDetailPageState extends State<WordCardDetailPage> {
     setState(() {
       username = userData['user_name'];
       usercoin = userData['user_coin'];
+      
       userlevel = userData['user_level'];
     });
   }
