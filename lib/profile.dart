@@ -35,6 +35,8 @@ class ProfileInfoPageState extends State<ProfileInfoPage> {
       usercoin = userData['user_coin'];
       userlevel = userData['user_level'];
       levelCap = dbHelper.levelCap(userlevel);
+      print(userlevel);
+      print(levelCap);
       getXP=userData['user_exp'];
       levelCurve = getXP/levelCap;
     });
@@ -92,10 +94,10 @@ class ProfileInfoPageState extends State<ProfileInfoPage> {
                             title: Column(
                               children: [
                                 ClipRRect(
-                                  child: Image(
-                                    image: NetworkImage(
-                                        'https://blog.cpanel.com/wp-content/uploads/2019/08/user-01.png'),
-                                  ),
+                                  child: Image.asset(
+                    'assets/user.png',
+                 
+                  ),
                                   borderRadius: BorderRadius.circular(500),
                                 ),
                                   LinearProgressIndicator(
@@ -138,10 +140,22 @@ class ProfileInfoPageState extends State<ProfileInfoPage> {
                         ListTile(
                             title: Row(
                           children: [
-                            Expanded(flex: 0, child: Text("LV")),
-                            Expanded(flex: 3, child: Text("$userlevel")),
-                            Expanded(flex: 0, child: Icon(Icons.money)),
-                            Expanded(flex: 1, child: Text("$usercoin")),
+                            Expanded(flex: 0, child: Text("LV",style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                            fontFamily: 'Kanit-Light'),)),
+                            Expanded(flex: 3, child: Text("$userlevel", style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                            fontFamily: 'Kanit-Light'),)),
+                            Expanded(flex: 0, child: Icon(Icons.money,)),
+                            Expanded(flex: 1, child: Text("$usercoin", style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                            fontFamily: 'Kanit-Light'),)),
                           ],
                         )),
                         Center(

@@ -38,6 +38,13 @@ dependencies:
   focused_menu: ^1.0.5
   auto_size_text: ^2.1.0
 
+  carousel_slider: ^3.0.0
+  flutter_fortune_wheel: ^1.0.0
+  maze: ^3.0.0
+  flutter_spinning_wheel: ^1.1.0
+
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -58,6 +65,7 @@ flutter:
     - assets/landing/
     - assets/coin-icon.png
     - assets/reward-cup-realPNG.png
+    - assets/user.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
