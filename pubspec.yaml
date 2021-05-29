@@ -36,6 +36,7 @@ dependencies:
   fluttertoast: ^8.0.7
   flutter_overboard: ^2.0.1
   focused_menu: ^1.0.5
+  auto_size_text: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -55,6 +56,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/landing/
+    - assets/coin-icon.png
+    - assets/reward-cup-realPNG.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

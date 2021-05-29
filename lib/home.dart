@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:popup_menu/popup_menu.dart';
+
 //Database
 import 'database/database.dart';
 
@@ -12,16 +13,23 @@ import 'WordCard.dart';
 
 class HomePage extends StatefulWidget {
   //Value
-  final Map<String, dynamic> myWeightRecord;
+  final Map<String, dynamic> userData;
 
   //Constructer
-  HomePage({Key key, this.myWeightRecord}) : super(key: key);
+  HomePage({Key key, this.userData}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState(userData);
 }
 
 class _HomePageState extends State<HomePage> {
+  //Constructer
+  _HomePageState(this.userData) {
+    username = userData['user_name'];
+    usercoin = userData['user_coin'];
+    userlevel = userData['user_level'];
+  }
+
   //Database
   final dbHelper = DatabaseHelper.instance;
 
@@ -186,7 +194,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    getUserData();
+    // getUserData();
     getWordCardData(categorySelect);
     bottomNavSet();
 
@@ -298,7 +306,7 @@ class _HomePageState extends State<HomePage> {
                 child: Container(
                   padding: const EdgeInsets.all(5),
                   child: Column(children: [
-                    Icon(Icons.star_rate_rounded, size: 24),
+                    Icon(Icons.star_rate_rounded, size: 24,color: Color(0xFFFF3377)),
                     Text(
                       "${cateName[1].toUpperCase()}",
                       style: TextStyle(
@@ -321,6 +329,7 @@ class _HomePageState extends State<HomePage> {
                   child: Column(children: [
                     Icon(
                       Icons.star_rate_rounded,
+                       color: Color(0xFFE53344),
                       size: 24,
                     ),
                     Text("${cateName[2].toUpperCase()}",
@@ -344,6 +353,8 @@ class _HomePageState extends State<HomePage> {
                   child: Column(children: [
                     Icon(
                       Icons.star_rate_rounded,
+                       color: Color(0xFF33DDAA)
+                      ,
                       size: 24,
                     ),
                     Text("${cateName[3].toUpperCase()}",
@@ -367,6 +378,7 @@ class _HomePageState extends State<HomePage> {
                   child: Column(children: [
                     Icon(
                       Icons.star_rate_rounded,
+                       color: Color(0xFF3344AA),
                       size: 24,
                     ),
                     Text("${cateName[4].toUpperCase()}",
@@ -389,7 +401,7 @@ class _HomePageState extends State<HomePage> {
                   padding: const EdgeInsets.all(5),
                   child: Column(children: [
                     Icon(
-                      Icons.star_rate_rounded,
+                      Icons.star_rate_rounded, color: Color(0xFFFFDD00),
                       size: 24,
                     ),
                     Text("${cateName[5].toUpperCase()}",
@@ -464,7 +476,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               Divider(
                                 thickness: 3,
-                              )
+                              ),
                             ],
                           )));
                 },

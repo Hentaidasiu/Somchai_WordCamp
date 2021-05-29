@@ -28,7 +28,7 @@ class WordTest {
 
     //Random Question
     for (var i = 0; i < questionTotal; i++) {
-      print('#: ' + i.toString());
+      // print('#: ' + i.toString());
 
       //Question
       int qIndex = 0;
@@ -40,7 +40,7 @@ class WordTest {
         wordListStorage.removeAt(qIndex);
       }
       questionList.add(qWord);
-      print('Q: ' + qWord);
+      // print('Q: ' + qWord);
 
       //Answer
       var aIndex = findAnswerIndex(qWord);
