@@ -79,6 +79,16 @@ class WordTestPageState extends State<WordTestPage> {
     });
   }
 
+  void plusTime() {
+    setState(() {
+      timeCount = timeCount + 3;
+      if (timeCount > 15) {
+        timeCount = 15;
+      }
+      timeCurve = (15 - timeCount) / 15;
+    });
+  }
+
   void answer(int choice) {
     _timer.cancel();
 
@@ -118,7 +128,7 @@ class WordTestPageState extends State<WordTestPage> {
     answerList = createdWordTest.getAnswer();
     trueanswerList = createdWordTest.getTrueAnswer();
     questionTotal = questionList.length;
-    
+
     _startTimer();
     super.initState();
   }
@@ -160,7 +170,7 @@ class WordTestPageState extends State<WordTestPage> {
                         children: [
                           Icon(Icons.more_time),
                           Text(
-                            'TIME',
+                            'UNUSED',
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           )
@@ -169,30 +179,44 @@ class WordTestPageState extends State<WordTestPage> {
                     ),
                   ),
                   Expanded(
-                    child: Center(
-                      child: Row(
-                        children: [
-                          Icon(Icons.lightbulb),
-                          Text(
-                            'Hint',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          )
-                        ],
+                    child: GestureDetector(
+                      onTap: () {
+                        plusTime();
+                      },
+                      child: Container(
+                        child: Center(
+                          child: Row(
+                            children: [
+                              Icon(Icons.more_time),
+                              Text(
+                                'TIME',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
                   Expanded(
-                    child: Center(
-                      child: Row(
-                        children: [
-                          Icon(Icons.skip_next),
-                          Text(
-                            'SKIP',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          )
-                        ],
+                    child: GestureDetector(
+                      onTap: () {
+                        answer(4);
+                      },
+                      child: Container(
+                        child: Center(
+                          child: Row(
+                            children: [
+                              Icon(Icons.skip_next),
+                              Text(
+                                'SKIP',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
